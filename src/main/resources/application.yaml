@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO}
+    show-sql: true
+
+jwt:
+  key: ${JWT_KEY}
+  access-token-expiration: 3600000
