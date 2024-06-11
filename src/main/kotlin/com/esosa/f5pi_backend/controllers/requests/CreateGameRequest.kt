@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 data class CreateGameRequest(
     @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -16,6 +16,9 @@ data class CreateGameRequest(
     @field:Min(value = 0, message = "Price must not be negative (that would be great!)")
     val individualPrice: Double,
 
-    @field:NotNull(message = "Player id must not be null")
+    @field:NotNull(message = "Field id must not be null")
+    val fieldId: UUID,
+
+    @field:NotNull(message = "User id must not be null")
     val userId: UUID
 )

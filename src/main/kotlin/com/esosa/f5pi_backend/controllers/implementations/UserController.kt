@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-class IUserController(private val userService: IUserService) : IUserController {
+class UserController(private val userService: IUserService) : IUserController {
     override fun getUserPlayers(userId: UUID): List<PlayerResponse> =
         userService.getUserPlayers(userId)
 

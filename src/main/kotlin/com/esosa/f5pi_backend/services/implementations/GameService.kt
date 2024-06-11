@@ -5,9 +5,11 @@ import com.esosa.f5pi_backend.controllers.requests.GameDetailsRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdateGameRequest
 import com.esosa.f5pi_backend.controllers.responses.GameDetailsResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
+import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IGameRepository
+import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.IGameService
 import com.esosa.f5pi_backend.services.interfaces.ITeamService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
@@ -20,7 +22,8 @@ import java.util.UUID
 class GameService(
     private val gameRepository: IGameRepository,
     private val userService: IUserService,
-    private val teamService: ITeamService
+    private val teamService: ITeamService,
+    private val fieldService: IFieldService
 ) : IGameService {
 
     override fun getGameDetails(gameId: UUID): GameDetailsResponse =
@@ -30,7 +33,8 @@ class GameService(
     override fun saveGame(createGameRequest: CreateGameRequest): GameResponse =
         with(createGameRequest) {
             val user = userService.findUserByIdOrThrowException(userId)
-            gameRepository.save(buildGame(user))
+            val field = fieldService.findFieldByIdOrThrowException(fieldId)
+            gameRepository.save(buildGame(field, user))
                 .buildGameResponse()
         }
 
@@ -64,5 +68,5 @@ class GameService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Game with id $gameId does not exist")
     }
 
-    private fun CreateGameRequest.buildGame(user: User) = Game(date, official, individualPrice, user)
+    private fun CreateGameRequest.buildGame(field: Field, user: User) = Game(date, official, individualPrice, field, user)
 }

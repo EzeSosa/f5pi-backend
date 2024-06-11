@@ -16,6 +16,9 @@ data class Game(
     var individualPrice: Double,
 
     @ManyToOne
+    val field: Field,
+
+    @ManyToOne
     val user: User,
 
     @OneToMany(mappedBy = "game")
@@ -24,6 +27,6 @@ data class Game(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildGameResponse(): GameResponse = GameResponse(id, date, official, individualPrice)
+    fun buildGameResponse(): GameResponse = GameResponse(id, date, official, individualPrice, field.name)
     fun buildGameDetailsResponse(): GameDetailsResponse = GameDetailsResponse(teams.map(Team::buildTeamResponse))
 }
