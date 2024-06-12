@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.data.models
 
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
@@ -15,7 +16,7 @@ data class Player(
     @ManyToOne
     val user: User,
 
-    @OneToOne
+    @OneToOne(cascade = [CascadeType.ALL])
     val playerStatistics: PlayerStatistics = PlayerStatistics(),
 
     @OneToMany(mappedBy = "player")
