@@ -11,3 +11,8 @@ spring:
 jwt:
   key: ${JWT_KEY}
   access-token-expiration: 3600000
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /
