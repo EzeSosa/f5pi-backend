@@ -21,6 +21,9 @@ data class User(
     @OneToMany(mappedBy = "user")
     val players: List<Player> = emptyList(),
 
+    @OneToMany(mappedBy = "user")
+    val fields: List<Field> = emptyList(),
+
     @Id
     val id: UUID = UUID.randomUUID()
 )

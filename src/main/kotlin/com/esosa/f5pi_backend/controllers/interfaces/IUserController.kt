@@ -1,5 +1,6 @@
 package com.esosa.f5pi_backend.controllers.interfaces
 
+import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import org.springframework.http.HttpStatus
@@ -18,4 +19,8 @@ interface IUserController {
     @GetMapping("/{userId}/games")
     @ResponseStatus(HttpStatus.OK)
     fun getUserGames(@PathVariable userId: UUID): List<GameResponse>
+
+    @GetMapping("/{userId}/fields")
+    @ResponseStatus(HttpStatus.OK)
+    fun getUserFields(@PathVariable userId: UUID): List<FieldResponse>
 }
