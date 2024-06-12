@@ -10,6 +10,6 @@ data class CreatePlayerRequest(
     @field:Size(max = 25, message = "Player name must be less than 25 characters")
     val name: String,
 
-    @field:NotNull(message = "Player id must not be null")
+    @field:NotNull(message = "User id must not be null")
     val userId: UUID
 )
