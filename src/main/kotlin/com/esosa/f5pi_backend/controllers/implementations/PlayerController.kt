@@ -5,10 +5,10 @@ import com.esosa.f5pi_backend.controllers.requests.CreatePlayerRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
-import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
-@RestControllerAdvice
+@RestController
 class PlayerController(private val playerService: IPlayerService) : IPlayerController {
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         playerService.savePlayer(createPlayerRequest)

@@ -16,6 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig(
     private val authProvider: AuthenticationProvider,
 ) {
+    private val WHITE_LIST_URL = arrayOf(
+        "/auth/**",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/",
+    )
 
     @Bean
     fun securityFilterChain(
@@ -26,7 +32,7 @@ class SecurityConfig(
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { httpRequests ->
                 httpRequests
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(*WHITE_LIST_URL).permitAll()
                     .requestMatchers(HttpMethod.GET, "api/v1/**").permitAll()
                     .anyRequest().authenticated()
             }
