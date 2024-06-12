@@ -30,5 +30,6 @@ interface IUserController {
 
     @GetMapping("/{userId}/fields")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Fetches a registered user fields")
     fun getUserFields(@PathVariable userId: UUID): List<FieldResponse>
 }
