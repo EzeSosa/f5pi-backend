@@ -48,7 +48,11 @@ class PlayerService(
             player.playerStatistics.apply {
                 if (winner && official) officialWins += 1
                 if (winner) allWins += 1
-                if (official) officialGoals += goalsScored
+                if (official) {
+                    officialGoals += goalsScored
+                    officialGames += 1
+                }
+                allGames += 1
                 allGoals += goalsScored
             }
         )
