@@ -1,7 +1,9 @@
 package com.esosa.f5pi_backend.services.implementations
 
+import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.User
@@ -40,4 +42,9 @@ class UserService(private val userRepository: IUserRepository) : IUserService {
         findUserByIdOrThrowException(userId)
             .games
             .map(Game::buildGameResponse)
+
+    override fun getUserFields(userId: UUID): List<FieldResponse> =
+        findUserByIdOrThrowException(userId)
+            .fields
+            .map(Field::buildFieldResponse)
 }

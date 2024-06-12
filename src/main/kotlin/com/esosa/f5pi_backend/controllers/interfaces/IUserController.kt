@@ -1,5 +1,6 @@
 package com.esosa.f5pi_backend.controllers.interfaces
 
+import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -26,4 +27,8 @@ interface IUserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Fetches a registered user games")
     fun getUserGames(@PathVariable userId: UUID): List<GameResponse>
+
+    @GetMapping("/{userId}/fields")
+    @ResponseStatus(HttpStatus.OK)
+    fun getUserFields(@PathVariable userId: UUID): List<FieldResponse>
 }

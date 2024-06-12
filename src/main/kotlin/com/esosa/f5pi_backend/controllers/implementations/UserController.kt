@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.controllers.implementations
 
 import com.esosa.f5pi_backend.controllers.interfaces.IUserController
+import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.services.interfaces.IUserService
@@ -14,4 +15,7 @@ class UserController(private val userService: IUserService) : IUserController {
 
     override fun getUserGames(userId: UUID): List<GameResponse> =
         userService.getUserGames(userId)
+
+    override fun getUserFields(userId: UUID): List<FieldResponse> =
+        userService.getUserFields(userId)
 }
