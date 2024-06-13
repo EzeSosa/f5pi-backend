@@ -6,6 +6,8 @@ import com.esosa.f5pi_backend.controllers.requests.UpdateGameRequest
 import com.esosa.f5pi_backend.controllers.responses.GameDetailsResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.data.models.Game
+import com.esosa.f5pi_backend.data.models.User
+import java.time.LocalDate
 import java.util.UUID
 
 interface IGameService {
@@ -15,4 +17,9 @@ interface IGameService {
     fun updateGame(gameId: UUID, updateGameRequest: UpdateGameRequest): GameResponse
     fun deleteGame(gameId: UUID)
     fun findGameByIdOrThrowException(gameId: UUID): Game
+    fun getGamesByUser(
+        user: User,
+        dateFrom: LocalDate? = null,
+        dateTo: LocalDate? = null
+    ): List<GameResponse>
 }

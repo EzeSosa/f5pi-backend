@@ -16,6 +16,7 @@ import com.esosa.f5pi_backend.services.interfaces.IUserService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 import java.util.UUID
 
 @Service
@@ -62,6 +63,10 @@ class GameService(
     override fun findGameByIdOrThrowException(gameId: UUID): Game =
         gameRepository.findById(gameId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Game with id $gameId does not exist") }
+
+    override fun getGamesByUser(user: User, dateFrom: LocalDate?, dateTo: LocalDate?): List<GameResponse> =
+        gameRepository.findByUser(user, dateFrom, dateTo)
+            .map(Game::buildGameResponse)
 
     private fun ifGameDoesNotExistThrowException(gameId: UUID) {
         if (!gameRepository.existsById(gameId))

@@ -8,14 +8,20 @@ import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IUserRepository
+import com.esosa.f5pi_backend.services.interfaces.IGameService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
+import org.springframework.context.annotation.Lazy
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 import java.util.UUID
 
 @Service
-class UserService(private val userRepository: IUserRepository) : IUserService {
+class UserService(
+    private val userRepository: IUserRepository,
+    @Lazy private val gameService: IGameService
+) : IUserService {
 
     override fun saveUser(user: User): User =
         userRepository.save(user)
@@ -38,10 +44,10 @@ class UserService(private val userRepository: IUserRepository) : IUserService {
             .players
             .map(Player::buildPlayerResponse)
 
-    override fun getUserGames(userId: UUID): List<GameResponse> =
-        findUserByIdOrThrowException(userId)
-            .games
-            .map(Game::buildGameResponse)
+    override fun getUserGames(userId: UUID, dateFrom: LocalDate?, dateTo: LocalDate?): List<GameResponse> =
+        findUserByIdOrThrowException(userId).let { user ->
+            gameService.getGamesByUser(user, dateFrom, dateTo)
+        }
 
     override fun getUserFields(userId: UUID): List<FieldResponse> =
         findUserByIdOrThrowException(userId)
