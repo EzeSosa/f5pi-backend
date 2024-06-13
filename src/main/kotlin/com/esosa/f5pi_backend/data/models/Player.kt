@@ -19,7 +19,7 @@ data class Player(
     @OneToOne(cascade = [CascadeType.ALL])
     val playerStatistics: PlayerStatistics = PlayerStatistics(),
 
-    @OneToMany(mappedBy = "player")
+    @OneToMany(mappedBy = "player", cascade = [CascadeType.ALL])
     val memberOf: List<Member> = emptyList(),
 
     @Id

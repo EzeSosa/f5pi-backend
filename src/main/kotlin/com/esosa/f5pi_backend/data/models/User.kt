@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.data.models
 
 import com.esosa.f5pi_backend.data.enums.Role
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
@@ -15,13 +16,13 @@ data class User(
 
     val role: Role = Role.USER,
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     val games: List<Game> = emptyList(),
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     val players: List<Player> = emptyList(),
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     val fields: List<Field> = emptyList(),
 
     @Id

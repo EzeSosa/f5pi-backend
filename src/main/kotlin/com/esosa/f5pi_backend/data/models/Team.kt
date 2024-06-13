@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.data.models
 
 import com.esosa.f5pi_backend.controllers.responses.TeamResponse
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
@@ -14,7 +15,7 @@ data class Team(
     @ManyToOne
     val game: Game,
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL])
     val members: List<Member> = emptyList(),
 
     @Id
