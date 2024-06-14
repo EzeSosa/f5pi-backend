@@ -1,12 +1,13 @@
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: ${DDL_AUTO}
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: ${DDL_AUTO}
-    show-sql: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 jwt:
   key: ${JWT_KEY}
