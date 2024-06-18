@@ -4,5 +4,5 @@ import com.esosa.f5pi_backend.controllers.requests.MemberRequest
 import com.esosa.f5pi_backend.data.models.Team
 
 interface IMemberService {
-    fun saveMember(team: Team, memberRequest: MemberRequest, winner: Boolean, official: Boolean)
+    fun saveMember(team: Team, memberRequest: MemberRequest, winner: Boolean, official: Boolean, price: Double)
 }

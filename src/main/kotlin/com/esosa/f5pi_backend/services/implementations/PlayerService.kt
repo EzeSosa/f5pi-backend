@@ -43,7 +43,7 @@ class PlayerService(
         playerRepository.findById(playerId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist") }
 
-    override fun updatePlayerStatistics(player: Player, goalsScored: Int, winner: Boolean, official: Boolean) {
+    override fun updatePlayerStatistics(player: Player, goalsScored: Int, winner: Boolean, official: Boolean, price: Double) {
         playerStatisticsRepository.save(
             player.playerStatistics.apply {
                 if (winner && official) officialWins += 1
@@ -54,6 +54,7 @@ class PlayerService(
                 }
                 allGames += 1
                 allGoals += goalsScored
+                moneySpent += price
             }
         )
     }

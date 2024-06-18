@@ -13,6 +13,7 @@ data class PlayerStatistics(
     var officialGames: Int = 0,
     var officialGoals: Int = 0,
     var officialWins: Int = 0,
+    var moneySpent: Double = 0.0,
 
     @Id
     val id: UUID = UUID.randomUUID()

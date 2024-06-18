@@ -14,10 +14,10 @@ class TeamService(
     private val memberService: IMemberService
 ) : ITeamService {
 
-    override fun saveTeam(game: Game, teamRequest: TeamRequest, official: Boolean) {
+    override fun saveTeam(game: Game, teamRequest: TeamRequest, official: Boolean, price: Double) {
         teamRepository.save(teamRequest.buildTeam(game)).let { team ->
             teamRequest.members
-                .forEach { memberRequest -> memberService.saveMember(team, memberRequest, teamRequest.winner, official) }
+                .forEach { memberRequest -> memberService.saveMember(team, memberRequest, teamRequest.winner, official, price) }
         }
     }
 

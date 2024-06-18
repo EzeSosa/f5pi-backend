@@ -15,10 +15,10 @@ class MemberService(
     private val playerService: IPlayerService
 ) : IMemberService {
 
-    override fun saveMember(team: Team, memberRequest: MemberRequest, winner: Boolean, official: Boolean) {
+    override fun saveMember(team: Team, memberRequest: MemberRequest, winner: Boolean, official: Boolean, price: Double) {
         val player = playerService.findPlayerByIdOrThrowException(memberRequest.playerId)
         memberRepository.save(memberRequest.buildMember(team, player))
-        playerService.updatePlayerStatistics(player, memberRequest.goalsScored, winner, official)
+        playerService.updatePlayerStatistics(player, memberRequest.goalsScored, winner, official, price)
     }
 
     private fun MemberRequest.buildMember(team: Team, player: Player): Member = Member(goalsScored, team, player)

@@ -42,7 +42,7 @@ class GameService(
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest) {
         findGameByIdOrThrowException(gameId).let { game ->
             gameDetailsRequest.teams
-                .forEach { teamRequest -> teamService.saveTeam(game, teamRequest, game.official) }
+                .forEach { teamRequest -> teamService.saveTeam(game, teamRequest, game.official, game.individualPrice) }
         }
     }
 

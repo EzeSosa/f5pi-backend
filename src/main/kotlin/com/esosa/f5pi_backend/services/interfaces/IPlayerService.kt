@@ -13,5 +13,5 @@ interface IPlayerService {
     fun deletePlayer(playerId: UUID)
     fun findPlayerByIdOrThrowException(playerId: UUID): Player
     @Async
-    fun updatePlayerStatistics(player: Player, goalsScored: Int, winner: Boolean, official: Boolean)
+    fun updatePlayerStatistics(player: Player, goalsScored: Int, winner: Boolean, official: Boolean, price: Double)
 }
