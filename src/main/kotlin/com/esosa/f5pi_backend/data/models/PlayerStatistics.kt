@@ -1,5 +1,6 @@
 package com.esosa.f5pi_backend.data.models
 
+import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import java.util.UUID
@@ -15,4 +16,6 @@ data class PlayerStatistics(
 
     @Id
     val id: UUID = UUID.randomUUID()
-)
+) {
+    fun buildPlayerStatisticsResponse(): PlayerStatisticsResponse = PlayerStatisticsResponse(allGames, allGoals, allWins, officialGames, officialGoals, officialWins)
+}
