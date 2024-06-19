@@ -8,7 +8,6 @@ import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.User
-import com.esosa.f5pi_backend.data.repositories.IGameDetailsRepository
 import com.esosa.f5pi_backend.data.repositories.IGameRepository
 import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.IGameService
@@ -26,7 +25,6 @@ class GameService(
     private val userService: IUserService,
     private val teamService: ITeamService,
     private val fieldService: IFieldService,
-    private val gameDetailsRepository: IGameDetailsRepository
 ) : IGameService {
 
     override fun getGameDetails(gameId: UUID): GameDetailsResponse =
