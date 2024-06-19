@@ -13,7 +13,7 @@ data class Team(
     val winner: Boolean,
 
     @ManyToOne
-    val game: Game,
+    val gameDetails: GameDetails,
 
     @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL])
     val members: List<Member> = emptyList(),

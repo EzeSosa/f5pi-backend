@@ -8,6 +8,7 @@ import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.User
+import com.esosa.f5pi_backend.data.repositories.IGameDetailsRepository
 import com.esosa.f5pi_backend.data.repositories.IGameRepository
 import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.IGameService
@@ -24,11 +25,13 @@ class GameService(
     private val gameRepository: IGameRepository,
     private val userService: IUserService,
     private val teamService: ITeamService,
-    private val fieldService: IFieldService
+    private val fieldService: IFieldService,
+    private val gameDetailsRepository: IGameDetailsRepository
 ) : IGameService {
 
     override fun getGameDetails(gameId: UUID): GameDetailsResponse =
         findGameByIdOrThrowException(gameId)
+            .details
             .buildGameDetailsResponse()
 
     override fun saveGame(createGameRequest: CreateGameRequest): GameResponse =
@@ -42,7 +45,8 @@ class GameService(
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest) {
         findGameByIdOrThrowException(gameId).let { game ->
             gameDetailsRequest.teams
-                .forEach { teamRequest -> teamService.saveTeam(game, teamRequest, game.official, game.individualPrice) }
+                .forEach { teamRequest -> teamService.saveTeam(game.details, teamRequest, game.official, game.individualPrice) }
+            gameDetailsRepository.save(game.details)
         }
     }
 
