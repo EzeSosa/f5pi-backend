@@ -24,11 +24,12 @@ class GameService(
     private val gameRepository: IGameRepository,
     private val userService: IUserService,
     private val teamService: ITeamService,
-    private val fieldService: IFieldService
+    private val fieldService: IFieldService,
 ) : IGameService {
 
     override fun getGameDetails(gameId: UUID): GameDetailsResponse =
         findGameByIdOrThrowException(gameId)
+            .details
             .buildGameDetailsResponse()
 
     override fun saveGame(createGameRequest: CreateGameRequest): GameResponse =
@@ -42,7 +43,7 @@ class GameService(
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest) {
         findGameByIdOrThrowException(gameId).let { game ->
             gameDetailsRequest.teams
-                .forEach { teamRequest -> teamService.saveTeam(game, teamRequest, game.official, game.individualPrice) }
+                .forEach { teamRequest -> teamService.saveTeam(game.details, teamRequest, game.official, game.individualPrice) }
         }
     }
 
