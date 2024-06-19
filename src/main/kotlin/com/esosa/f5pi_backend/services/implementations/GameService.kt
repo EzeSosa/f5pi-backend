@@ -46,7 +46,6 @@ class GameService(
         findGameByIdOrThrowException(gameId).let { game ->
             gameDetailsRequest.teams
                 .forEach { teamRequest -> teamService.saveTeam(game.details, teamRequest, game.official, game.individualPrice) }
-            gameDetailsRepository.save(game.details)
         }
     }
 
