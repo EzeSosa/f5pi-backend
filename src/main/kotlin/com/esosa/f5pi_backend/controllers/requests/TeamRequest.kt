@@ -8,6 +8,6 @@ data class TeamRequest(
     val winner: Boolean,
 
     @field:NotNull(message = "Members list cannot be null")
-    @field:Size(min = 5, max = 5, message = "Members list size must be 2")
+    @field:Size(min = 5, max = 11, message = "Members list size must be between 5 and 11")
     val members: List<MemberRequest>,
 )

@@ -41,6 +41,7 @@ class GameService(
         }
 
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest) {
+        ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
         findGameByIdOrThrowException(gameId).let { game ->
             gameDetailsRequest.teams
                 .forEach { teamRequest -> teamService.saveTeam(game.details, teamRequest, game.official, game.individualPrice) }
@@ -72,6 +73,13 @@ class GameService(
     private fun ifGameDoesNotExistThrowException(gameId: UUID) {
         if (!gameRepository.existsById(gameId))
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Game with id $gameId does not exist")
+    }
+
+    private fun ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest: GameDetailsRequest) {
+        with(gameDetailsRequest){
+            if (teams[0].members.size != teams[1].members.size)
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Both teams must have the same member size")
+        }
     }
 
     private fun CreateGameRequest.buildGame(field: Field, user: User) = Game(date, official, individualPrice, field, user)
