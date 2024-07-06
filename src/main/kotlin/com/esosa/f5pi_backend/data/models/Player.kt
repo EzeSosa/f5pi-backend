@@ -16,7 +16,7 @@ data class Player(
     @ManyToOne
     val user: User,
 
-    val imageURL: String?,
+    var imageURL: String?,
 
     @OneToOne(cascade = [CascadeType.ALL])
     val playerStatistics: PlayerStatistics = PlayerStatistics(),

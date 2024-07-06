@@ -30,8 +30,10 @@ class PlayerService(
 
     override fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse =
         findPlayerByIdOrThrowException(playerId).let { player ->
-            playerRepository.save(player.apply { name = updatePlayerRequest.name })
-                .buildPlayerResponse()
+            playerRepository.save(player.apply {
+                name = updatePlayerRequest.name
+                imageURL = updatePlayerRequest.imageURL
+            }).buildPlayerResponse()
         }
 
     override fun deletePlayer(playerId: UUID) {
