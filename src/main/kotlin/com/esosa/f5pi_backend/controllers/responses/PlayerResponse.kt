@@ -5,5 +5,6 @@ import java.util.UUID
 data class PlayerResponse(
     val playerId: UUID,
     val name: String,
+    val imageURL: String?,
     val statistics: PlayerStatisticsResponse
 )

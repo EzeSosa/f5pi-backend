@@ -64,5 +64,5 @@ class PlayerService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist")
     }
 
-    private fun CreatePlayerRequest.buildPlayer(user: User): Player = Player(name, user)
+    private fun CreatePlayerRequest.buildPlayer(user: User): Player = Player(name, user, imageURL)
 }

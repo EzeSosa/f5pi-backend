@@ -16,6 +16,8 @@ data class Player(
     @ManyToOne
     val user: User,
 
+    val imageURL: String?,
+
     @OneToOne(cascade = [CascadeType.ALL])
     val playerStatistics: PlayerStatistics = PlayerStatistics(),
 
@@ -25,5 +27,5 @@ data class Player(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildPlayerResponse(): PlayerResponse = PlayerResponse(id, name, playerStatistics.buildPlayerStatisticsResponse())
+    fun buildPlayerResponse(): PlayerResponse = PlayerResponse(id, name, imageURL, playerStatistics.buildPlayerStatisticsResponse())
 }
