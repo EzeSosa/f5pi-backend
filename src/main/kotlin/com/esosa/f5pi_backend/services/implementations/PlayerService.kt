@@ -3,6 +3,7 @@ package com.esosa.f5pi_backend.services.implementations
 import com.esosa.f5pi_backend.controllers.requests.CreatePlayerRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.repositories.IPlayerRepository
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
@@ -20,6 +21,11 @@ class PlayerService(
     private val playerStatisticsRepository: IPlayerStatisticsRepository,
     private val userService: IUserService
 ) : IPlayerService {
+
+    override fun getPlayerStatistics(playerId: UUID): PlayerStatisticsResponse =
+        findPlayerByIdOrThrowException(playerId)
+            .playerStatistics
+            .buildPlayerStatisticsResponse()
 
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         with(createPlayerRequest) {

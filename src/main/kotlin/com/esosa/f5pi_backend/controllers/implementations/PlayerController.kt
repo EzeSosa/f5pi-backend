@@ -4,12 +4,16 @@ import com.esosa.f5pi_backend.controllers.interfaces.IPlayerController
 import com.esosa.f5pi_backend.controllers.requests.CreatePlayerRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
 class PlayerController(private val playerService: IPlayerService) : IPlayerController {
+    override fun getPlayerStatistics(playerId: UUID): PlayerStatisticsResponse =
+        playerService.getPlayerStatistics(playerId)
+
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         playerService.savePlayer(createPlayerRequest)
 

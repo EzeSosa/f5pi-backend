@@ -3,11 +3,13 @@ package com.esosa.f5pi_backend.controllers.interfaces
 import com.esosa.f5pi_backend.controllers.requests.CreatePlayerRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,6 +24,11 @@ import java.util.UUID
     description = "Allows registered users to register, update and delete players."
 )
 interface IPlayerController {
+    @GetMapping("/{playerId}/statistics")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Fetches an existent player statistics")
+    fun getPlayerStatistics(@PathVariable playerId: UUID): PlayerStatisticsResponse
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registers a new player for a registered user")

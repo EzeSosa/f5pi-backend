@@ -27,5 +27,5 @@ data class Player(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildPlayerResponse(): PlayerResponse = PlayerResponse(id, name, imageURL, playerStatistics.buildPlayerStatisticsResponse())
+    fun buildPlayerResponse(): PlayerResponse = PlayerResponse(id, name, imageURL)
 }
