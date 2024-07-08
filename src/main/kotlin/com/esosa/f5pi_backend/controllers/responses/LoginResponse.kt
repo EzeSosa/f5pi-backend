@@ -4,5 +4,6 @@ import java.util.UUID
 
 data class LoginResponse(
     val userId: UUID,
-    val accessToken: String
+    val accessToken: String,
+    val refreshToken: String
 )

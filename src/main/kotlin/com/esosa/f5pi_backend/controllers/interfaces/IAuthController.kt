@@ -1,7 +1,9 @@
 package com.esosa.f5pi_backend.controllers.interfaces
 
 import com.esosa.f5pi_backend.controllers.requests.AuthRequest
+import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
 import com.esosa.f5pi_backend.controllers.responses.LoginResponse
+import com.esosa.f5pi_backend.controllers.responses.RefreshTokenResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -24,6 +26,11 @@ interface IAuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Authenticates a new user")
+    @Operation(summary = "Authenticates an existent user")
     fun login(@RequestBody @Valid authRequest: AuthRequest): LoginResponse
+
+    @PostMapping("/refresh")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Refreshes the access token for an existent user")
+    fun refresh(@RequestBody @Valid refreshTokenRequest: RefreshTokenRequest): RefreshTokenResponse
 }
