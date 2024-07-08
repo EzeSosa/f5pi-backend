@@ -66,8 +66,8 @@ class GameService(
         gameRepository.findById(gameId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Game with id $gameId does not exist") }
 
-    override fun getGamesByUser(user: User, dateFrom: LocalDate?, dateTo: LocalDate?): List<GameResponse> =
-        gameRepository.findByUser(user, dateFrom, dateTo)
+    override fun getGamesByUser(user: User, dateFrom: LocalDate?, dateTo: LocalDate?, official: Boolean?): List<GameResponse> =
+        gameRepository.findByUser(user, dateFrom, dateTo, official)
             .map(Game::buildGameResponse)
 
     private fun ifGameDoesNotExistThrowException(gameId: UUID) {

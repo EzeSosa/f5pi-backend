@@ -20,6 +20,7 @@ interface IGameService {
     fun getGamesByUser(
         user: User,
         dateFrom: LocalDate? = null,
-        dateTo: LocalDate? = null
+        dateTo: LocalDate? = null,
+        official: Boolean? = null
     ): List<GameResponse>
 }

@@ -11,11 +11,13 @@ interface IGameRepository: JpaRepository<Game, UUID> {
     @Query( "SELECT g from Game g WHERE " +
             "g.user = ?1 " +
             "AND (?2 is null or g.date >= ?2) " +
-            "AND (?3 is null or g.date <= ?3)"
+            "AND (?3 is null or g.date <= ?3) " +
+            "AND (?4 is null or g.official = ?4)"
     )
     fun findByUser(
         user: User,
         dateFrom: LocalDate?,
-        dateTo: LocalDate?
+        dateTo: LocalDate?,
+        official: Boolean?
     ): List<Game>
 }

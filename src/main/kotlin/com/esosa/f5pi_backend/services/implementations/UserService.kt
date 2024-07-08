@@ -43,9 +43,9 @@ class UserService(
             .players
             .map(Player::buildPlayerResponse)
 
-    override fun getUserGames(userId: UUID, dateFrom: LocalDate?, dateTo: LocalDate?): List<GameResponse> =
+    override fun getUserGames(userId: UUID, dateFrom: LocalDate?, dateTo: LocalDate?, official: Boolean?): List<GameResponse> =
         findUserByIdOrThrowException(userId).let { user ->
-            gameService.getGamesByUser(user, dateFrom, dateTo)
+            gameService.getGamesByUser(user, dateFrom, dateTo, official)
         }
 
     override fun getUserFields(userId: UUID): List<FieldResponse> =

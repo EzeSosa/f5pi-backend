@@ -31,7 +31,8 @@ interface IUserController {
     fun getUserGames(
         @PathVariable userId: UUID,
         @RequestParam dateFrom: LocalDate?,
-        @RequestParam dateTo: LocalDate?
+        @RequestParam dateTo: LocalDate?,
+        @RequestParam official: Boolean?
     ): List<GameResponse>
 
     @GetMapping("/{userId}/fields")

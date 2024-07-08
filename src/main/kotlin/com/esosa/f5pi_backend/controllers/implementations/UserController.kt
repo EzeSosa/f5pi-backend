@@ -19,9 +19,10 @@ class UserController(private val userService: IUserService) : IUserController {
     override fun getUserGames(
         @PathVariable userId: UUID,
         @RequestParam dateFrom: LocalDate?,
-        @RequestParam dateTo: LocalDate?
+        @RequestParam dateTo: LocalDate?,
+        @RequestParam official: Boolean?
     ): List<GameResponse> =
-        userService.getUserGames(userId, dateFrom, dateTo)
+        userService.getUserGames(userId, dateFrom, dateTo, official)
 
     override fun getUserFields(userId: UUID): List<FieldResponse> =
         userService.getUserFields(userId)
