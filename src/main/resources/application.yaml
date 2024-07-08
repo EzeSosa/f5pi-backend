@@ -12,6 +12,7 @@ spring:
 jwt:
   key: ${JWT_KEY:2CDFK2MJKLAM2KJCP2KLMCKJADJK2KLASMCJKD2KJKADKJJK2KCKJDS22}
   access-token-expiration: 3600000
+  refresh-token-expiration: 432000000
 
 springdoc:
   swagger-ui:

@@ -2,7 +2,9 @@ package com.esosa.f5pi_backend.controllers.implementations
 
 import com.esosa.f5pi_backend.controllers.interfaces.IAuthController
 import com.esosa.f5pi_backend.controllers.requests.AuthRequest
+import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
 import com.esosa.f5pi_backend.controllers.responses.LoginResponse
+import com.esosa.f5pi_backend.controllers.responses.RefreshTokenResponse
 import com.esosa.f5pi_backend.services.interfaces.IAuthService
 import org.springframework.web.bind.annotation.RestController
 
@@ -13,4 +15,7 @@ class AuthController(private val authService: IAuthService) : IAuthController {
 
     override fun login(authRequest: AuthRequest): LoginResponse =
         authService.login(authRequest)
+
+    override fun refresh(refreshTokenRequest: RefreshTokenRequest): RefreshTokenResponse =
+        authService.refreshToken(refreshTokenRequest)
 }
