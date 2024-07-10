@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.exceptions
 
 import io.jsonwebtoken.JwtException
+import org.springframework.ai.retry.NonTransientAiException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.BadCredentialsException
@@ -64,6 +65,15 @@ class ExceptionControllerAdvice {
     fun handleUsernameNotFoundException(ex: UsernameNotFoundException): ExceptionPayload =
         ExceptionPayload(
             message = "Username does not exist.",
+            status = HttpStatus.BAD_REQUEST.value(),
+            trace = ex.stackTrace
+        )
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NonTransientAiException::class)
+    fun handleNonTransientAiException(ex: NonTransientAiException): ExceptionPayload =
+        ExceptionPayload(
+            message = "Error with OpenAI. Contact an administrator.",
             status = HttpStatus.BAD_REQUEST.value(),
             trace = ex.stackTrace
         )
