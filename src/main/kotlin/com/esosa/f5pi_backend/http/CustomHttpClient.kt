@@ -1,5 +1,7 @@
 package com.esosa.f5pi_backend.http
 
+import com.esosa.f5pi_backend.controllers.responses.GenerateTeamsResponse
+import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -13,7 +15,7 @@ import org.springframework.http.MediaType
 class CustomHttpClient {
     private val restTemplate = RestTemplate()
 
-    fun doRequest(url: String, message: String): String {
+    fun doRequest(url: String, message: String): JsonNode {
         val requestBody = QueryRequest(message)
         val headers = HttpHeaders().apply {
             contentType = MediaType.APPLICATION_JSON
@@ -23,7 +25,7 @@ class CustomHttpClient {
             url,
             HttpMethod.POST,
             requestEntity,
-            String::class.java
+            JsonNode::class.java
         )
 
         return response.body

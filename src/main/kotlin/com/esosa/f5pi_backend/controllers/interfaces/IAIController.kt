@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.controllers.interfaces
 
 import com.esosa.f5pi_backend.controllers.requests.GenerateTeamsRequest
+import com.esosa.f5pi_backend.controllers.responses.GenerateTeamsResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -19,5 +20,5 @@ interface IAIController {
     @PostMapping("/generate-teams")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Generates a team based on player statistics.")
-    fun generateTeams(@RequestBody @Valid generateTeamsRequest: GenerateTeamsRequest): String
+    fun generateTeams(@RequestBody @Valid generateTeamsRequest: GenerateTeamsRequest): GenerateTeamsResponse
 }
