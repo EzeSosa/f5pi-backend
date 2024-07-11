@@ -14,12 +14,9 @@ import org.springframework.http.MediaType
 class CustomHttpClient {
     private val restTemplate = RestTemplate()
 
-    fun doRequest(url: String, message: String): JsonNode {
-        val requestBody = QueryRequest(message)
-        val headers = HttpHeaders().apply {
-            contentType = MediaType.APPLICATION_JSON
-        }
-        val requestEntity = HttpEntity(requestBody, headers)
+    fun <T> doRequest(url: String, body: T): JsonNode {
+        val headers = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
+        val requestEntity = HttpEntity(body, headers)
         val response = restTemplate.exchange(
             url,
             HttpMethod.POST,
@@ -30,6 +27,4 @@ class CustomHttpClient {
         return response.body
             ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
     }
-
-    data class QueryRequest(val query: String)
 }

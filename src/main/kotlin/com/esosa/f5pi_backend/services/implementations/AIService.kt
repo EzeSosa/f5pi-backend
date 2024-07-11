@@ -7,7 +7,9 @@ import com.esosa.f5pi_backend.http.CustomHttpClient
 import com.esosa.f5pi_backend.services.interfaces.IAIService
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
 import com.fasterxml.jackson.databind.JsonNode
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class AIService(
@@ -28,8 +30,8 @@ class AIService(
                 append(playerService.findPlayerByIdOrThrowException(playerId).listStatistics())
             }
         }
-        return httpClient.doRequest(url, requestMessage)
-            .buildTeamsResponse()
+        return httpClient.doRequest(url, QueryRequest(requestMessage))
+            .buildGenerateTeamsResponse()
     }
 
     private fun Player.listStatistics(): String = """
@@ -37,10 +39,15 @@ class AIService(
         |Wins: ${playerStatistics.allWins}, Goals scored: ${playerStatistics.allGoals}
     """.trimMargin()
 
-    private fun JsonNode.buildTeamsResponse(): GenerateTeamsResponse {
-        val explanation = this["explanation"].asText()
-        val teams = this["teams"].buildTeamsList()
-        return GenerateTeamsResponse(explanation, teams)
+    private fun JsonNode.buildGenerateTeamsResponse(): GenerateTeamsResponse {
+        try {
+            val explanation = this["explanation"].asText() ?: ""
+            val teams = this["teams"].buildTeamsList()
+            return GenerateTeamsResponse(explanation, teams)
+
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "There was an error processing the response. Please retry again.")
+        }
     }
 
     private fun JsonNode.buildTeamsList(): List<List<String>> =
@@ -50,4 +57,6 @@ class AIService(
 
     private fun JsonNode.toPlayerList(): List<String> =
         this.map { it.asText() }
+
+    data class QueryRequest(val query: String)
 }
