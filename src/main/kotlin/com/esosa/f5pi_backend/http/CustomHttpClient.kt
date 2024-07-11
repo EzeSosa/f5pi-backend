@@ -1,6 +1,5 @@
 package com.esosa.f5pi_backend.http
 
-import com.esosa.f5pi_backend.controllers.responses.GenerateTeamsResponse
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
