@@ -17,10 +17,7 @@ java {
 
 repositories {
 	mavenCentral()
-	maven { url = uri("https://repo.spring.io/milestone") }
 }
-
-extra["springAiVersion"] = "1.0.0-M1"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -31,7 +28,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("io.jsonwebtoken:jjwt-api:0.12.5")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
-	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
+	implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 
 	runtimeOnly("com.mysql:mysql-connector-j")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
@@ -41,12 +38,6 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-dependencyManagement {
-	imports {
-		mavenBom("org.springframework.ai:spring-ai-bom:${property("springAiVersion")}")
-	}
 }
 
 tasks.withType<KotlinCompile> {

@@ -8,9 +8,6 @@ spring:
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  ai:
-    openai:
-      api-key: ${API_KEY:sk-proj-10gwP3i9qL2T8yKLpVzcT3BlbkFJC9TTLhN6pVL53L1Ws9aa}
 
 jwt:
   key: ${JWT_KEY:2CDFK2MJKLAM2KJCP2KLMCKJADJK2KLASMCJKD2KJKADKJJK2KCKJDS22}
