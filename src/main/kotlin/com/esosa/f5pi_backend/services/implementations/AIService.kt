@@ -2,14 +2,13 @@ package com.esosa.f5pi_backend.services.implementations
 
 import com.esosa.f5pi_backend.controllers.requests.GenerateTeamsRequest
 import com.esosa.f5pi_backend.controllers.responses.GenerateTeamsResponse
+import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.http.CustomHttpClient
 import com.esosa.f5pi_backend.services.interfaces.IAIService
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
 import com.fasterxml.jackson.databind.JsonNode
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 
 @Service
 class AIService(
@@ -24,14 +23,17 @@ class AIService(
     private val url = "http://127.0.0.1:5000/generate-teams"
 
     override fun generateTeams(generateTeamsRequest: GenerateTeamsRequest): GenerateTeamsResponse {
+        var playerByName = HashMap<String, Player>()
         val requestMessage = buildString {
             append(baseMessage)
             generateTeamsRequest.playersId.forEach { playerId ->
-                append(playerService.findPlayerByIdOrThrowException(playerId).listStatistics())
+                val player = playerService.findPlayerByIdOrThrowException(playerId)
+                playerByName[player.name] = player
+                append(player.listStatistics())
             }
         }
         return httpClient.doRequest(url, QueryRequest(requestMessage))
-            .buildGenerateTeamsResponse()
+            .buildGenerateTeamsResponse(playerByName)
     }
 
     private fun Player.listStatistics(): String = """
@@ -39,24 +41,19 @@ class AIService(
         |Wins: ${playerStatistics.allWins}, Goals scored: ${playerStatistics.allGoals}
     """.trimMargin()
 
-    private fun JsonNode.buildGenerateTeamsResponse(): GenerateTeamsResponse {
-        try {
-            val explanation = this["explanation"].asText() ?: ""
-            val teams = this["teams"].buildTeamsList()
-            return GenerateTeamsResponse(explanation, teams)
-
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "There was an error processing the response. Please retry again.")
-        }
+    private fun JsonNode.buildGenerateTeamsResponse(playerByName: HashMap<String, Player>): GenerateTeamsResponse {
+        val explanation = this["explanation"].asText()
+        val teams = this["teams"].buildTeamsList(playerByName)
+        return GenerateTeamsResponse(explanation, teams)
     }
 
-    private fun JsonNode.buildTeamsList(): List<List<String>> =
+    private fun JsonNode.buildTeamsList(playerByName: HashMap<String, Player>): List<List<PlayerResponse>> =
         this.fields().asSequence()
-            .map { it.value.toPlayerList() }
+            .map { it.value.toPlayerList(playerByName) }
             .toList()
 
-    private fun JsonNode.toPlayerList(): List<String> =
-        this.map { it.asText() }
+    private fun JsonNode.toPlayerList(playerByName: HashMap<String, Player>): List<PlayerResponse> =
+        this.map { playerByName[it.asText()]!!.buildPlayerResponse() }
 
     data class QueryRequest(val query: String)
 }
