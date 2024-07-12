@@ -1,10 +1,11 @@
 package com.esosa.f5pi_backend.controllers.responses
 
 data class PlayerStatisticsResponse(
-    var allGames: Int = 0,
-    var allGoals: Int = 0,
-    var allWins: Int = 0,
-    var officialGames: Int = 0,
-    var officialGoals: Int = 0,
-    var officialWins: Int = 0
+    val allGames: Long = 0,
+    val allGoals: Long = 0,
+    val allWins: Long = 0,
+    val officialGames: Long = 0,
+    val officialGoals: Long = 0,
+    val officialWins: Long = 0,
+    val moneySpent: Long = 0
 )

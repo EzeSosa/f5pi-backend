@@ -9,7 +9,6 @@ import com.esosa.f5pi_backend.data.repositories.IPlayerRepository
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
 import com.esosa.f5pi_backend.data.models.User
-import com.esosa.f5pi_backend.data.repositories.IPlayerStatisticsRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -18,14 +17,12 @@ import java.util.UUID
 @Service
 class PlayerService(
     private val playerRepository: IPlayerRepository,
-    private val playerStatisticsRepository: IPlayerStatisticsRepository,
     private val userService: IUserService
 ) : IPlayerService {
 
     override fun getPlayerStatistics(playerId: UUID): PlayerStatisticsResponse =
-        findPlayerByIdOrThrowException(playerId)
-            .playerStatistics
-            .buildPlayerStatisticsResponse()
+        try { playerRepository.getPlayerStatistics(findPlayerByIdOrThrowException(playerId)) }
+        catch (e: Exception) { PlayerStatisticsResponse() }
 
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         with(createPlayerRequest) {
@@ -50,22 +47,6 @@ class PlayerService(
     override fun findPlayerByIdOrThrowException(playerId: UUID): Player =
         playerRepository.findById(playerId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist") }
-
-    override fun updatePlayerStatistics(player: Player, goalsScored: Int, winner: Boolean, official: Boolean, price: Double) {
-        playerStatisticsRepository.save(
-            player.playerStatistics.apply {
-                if (winner && official) officialWins += 1
-                if (winner) allWins += 1
-                if (official) {
-                    officialGoals += goalsScored
-                    officialGames += 1
-                }
-                allGames += 1
-                allGoals += goalsScored
-                moneySpent += price
-            }
-        )
-    }
 
     private fun ifPlayerDoesNotExistThrowException(playerId: UUID) {
         if (!playerRepository.existsById(playerId))
