@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 )
 interface IAIController {
     @PostMapping("/generate-teams")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Generates a team based on player statistics.")
     fun generateTeams(@RequestBody @Valid generateTeamsRequest: GenerateTeamsRequest): GenerateTeamsResponse
 }
