@@ -8,7 +8,11 @@ import com.esosa.f5pi_backend.data.models.Player
 import java.util.UUID
 
 interface IPlayerService {
-    fun getPlayerStatistics(playerId: UUID): PlayerStatisticsResponse
+    fun getPlayerStatistics(
+        playerId: UUID,
+        fieldId: UUID? = null,
+        seasonId: UUID? = null
+    ): PlayerStatisticsResponse
     fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse
     fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse
     fun deletePlayer(playerId: UUID)

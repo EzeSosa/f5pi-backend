@@ -3,8 +3,10 @@ package com.esosa.f5pi_backend.services.implementations
 import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
+import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IUserRepository
 import com.esosa.f5pi_backend.services.interfaces.IGameService
@@ -52,4 +54,9 @@ class UserService(
         findUserByIdOrThrowException(userId)
             .fields
             .map(Field::buildFieldResponse)
+
+    override fun getUserSeasons(userId: UUID): List<SeasonResponse> =
+        findUserByIdOrThrowException(userId)
+            .seasons
+            .map(Season::buildSeasonResponse)
 }

@@ -40,6 +40,8 @@ class GameService(
             val user = userService.findUserByIdOrThrowException(userId)
             val field = fieldService.findFieldByIdOrThrowException(fieldId)
             val season = seasonService.findSeasonByIdOrThrowException(seasonId)
+            ifGameDateIsOutOfSeasonThrowException(this, season)
+
             gameRepository.save(buildGame(field, user, season))
                 .buildGameResponse()
         }
@@ -84,6 +86,11 @@ class GameService(
             if (teams[0].members.size != teams[1].members.size)
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Both teams must have the same member size")
         }
+    }
+
+    private fun ifGameDateIsOutOfSeasonThrowException(createGameRequest: CreateGameRequest, season: Season) {
+        if (createGameRequest.date.isAfter(season.finalDate))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Game date is out of the season selected")
     }
 
     private fun CreateGameRequest.buildGame(field: Field, user: User, season: Season) =

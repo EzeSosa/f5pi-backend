@@ -23,6 +23,9 @@ data class User(
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     val fields: List<Field> = emptyList(),
 
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    val seasons: List<Season> = emptyList(),
+
     @Id
     val id: UUID = UUID.randomUUID()
 )

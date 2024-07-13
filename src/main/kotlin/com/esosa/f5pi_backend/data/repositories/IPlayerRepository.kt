@@ -1,7 +1,9 @@
 package com.esosa.f5pi_backend.data.repositories
 
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
+import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
+import com.esosa.f5pi_backend.data.models.Season
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.util.UUID
@@ -21,6 +23,8 @@ interface IPlayerRepository: JpaRepository<Player, UUID> {
             + "INNER JOIN Team t ON m.team = t "
             + "INNER JOIN GameDetails gd ON t.gameDetails = gd "
             + "INNER JOIN Game g ON g.details = gd "
-            + "WHERE p = ?1")
-    fun getPlayerStatistics(player: Player): PlayerStatisticsResponse
+            + "WHERE (p = ?1) "
+            + "AND (?2 is null OR g.field = ?2) "
+            + "AND (?3 is null OR g.season = ?3)")
+    fun getPlayerStatistics(player: Player, field: Field?, season: Season?): PlayerStatisticsResponse
 }
