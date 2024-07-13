@@ -19,6 +19,9 @@ data class CreateGameRequest(
     @field:NotNull(message = "Field id must not be null")
     val fieldId: UUID,
 
+    @field:NotNull(message = "Season id must not be null")
+    val seasonId: UUID,
+
     @field:NotNull(message = "User id must not be null")
     val userId: UUID
 )

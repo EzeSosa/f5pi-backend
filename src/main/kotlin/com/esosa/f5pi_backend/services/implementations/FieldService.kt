@@ -28,8 +28,9 @@ class FieldService(
 
     override fun updateField(fieldId: UUID, updateFieldRequest: UpdateFieldRequest): FieldResponse =
         findFieldByIdOrThrowException(fieldId).let {field ->
-            fieldRepository.save(field).apply { name = updateFieldRequest.name }
-                .buildFieldResponse()
+            fieldRepository.save(field.apply {
+                name = updateFieldRequest.name
+            }).buildFieldResponse()
         }
 
     override fun deleteField(fieldId: UUID) {
