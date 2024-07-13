@@ -1,10 +1,7 @@
 package com.esosa.f5pi_backend.controllers.interfaces
 
-import com.esosa.f5pi_backend.controllers.requests.CreateFieldRequest
 import com.esosa.f5pi_backend.controllers.requests.CreateSeasonRequest
-import com.esosa.f5pi_backend.controllers.requests.UpdateFieldRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdateSeasonRequest
-import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
