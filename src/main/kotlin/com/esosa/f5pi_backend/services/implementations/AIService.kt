@@ -18,7 +18,8 @@ class AIService(
 
     private val BASE_MESSAGE = """
         Generate two balanced teams with 5 players based on their matches played, their wins and their 
-        goals scored. Here is the list of the players and their stats:
+        goals scored. Balanced means the two teams have to have the same skill level, so the best players
+        must be separated. Here is the list of the players and their stats:
         """
     private val URL = "http://127.0.0.1:5000/generate-teams"
 
