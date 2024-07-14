@@ -19,6 +19,9 @@ data class Game(
     val field: Field,
 
     @ManyToOne
+    val season: Season,
+
+    @ManyToOne
     val user: User,
 
     @OneToOne(cascade = [CascadeType.ALL])

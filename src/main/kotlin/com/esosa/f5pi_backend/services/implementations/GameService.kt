@@ -7,10 +7,12 @@ import com.esosa.f5pi_backend.controllers.responses.GameDetailsResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
+import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IGameRepository
 import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.IGameService
+import com.esosa.f5pi_backend.services.interfaces.ISeasonService
 import com.esosa.f5pi_backend.services.interfaces.ITeamService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
 import org.springframework.http.HttpStatus
@@ -25,6 +27,7 @@ class GameService(
     private val userService: IUserService,
     private val teamService: ITeamService,
     private val fieldService: IFieldService,
+    private val seasonService: ISeasonService
 ) : IGameService {
 
     override fun getGameDetails(gameId: UUID): GameDetailsResponse =
@@ -36,7 +39,10 @@ class GameService(
         with(createGameRequest) {
             val user = userService.findUserByIdOrThrowException(userId)
             val field = fieldService.findFieldByIdOrThrowException(fieldId)
-            gameRepository.save(buildGame(field, user))
+            val season = seasonService.findSeasonByIdOrThrowException(seasonId)
+            ifGameDateIsOutOfSeasonThrowException(this, season)
+
+            gameRepository.save(buildGame(field, user, season))
                 .buildGameResponse()
         }
 
@@ -82,5 +88,11 @@ class GameService(
         }
     }
 
-    private fun CreateGameRequest.buildGame(field: Field, user: User) = Game(date, official, individualPrice, field, user)
+    private fun ifGameDateIsOutOfSeasonThrowException(createGameRequest: CreateGameRequest, season: Season) {
+        if (createGameRequest.date.isAfter(season.finalDate))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Game date is out of the season selected")
+    }
+
+    private fun CreateGameRequest.buildGame(field: Field, user: User, season: Season) =
+        Game(date, official, individualPrice, field, season, user)
 }

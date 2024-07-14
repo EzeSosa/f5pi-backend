@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import java.util.UUID
 
@@ -27,7 +28,10 @@ interface IPlayerController {
     @GetMapping("/{playerId}/statistics")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Fetches an existent player statistics")
-    fun getPlayerStatistics(@PathVariable playerId: UUID): PlayerStatisticsResponse
+    fun getPlayerStatistics(@PathVariable playerId: UUID,
+        @RequestParam fieldId: UUID?,
+        @RequestParam seasonId: UUID?
+    ): PlayerStatisticsResponse
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

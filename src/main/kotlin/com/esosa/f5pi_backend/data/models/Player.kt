@@ -18,9 +18,6 @@ data class Player(
 
     var imageURL: String?,
 
-    @OneToOne(cascade = [CascadeType.ALL])
-    val playerStatistics: PlayerStatistics = PlayerStatistics(),
-
     @OneToMany(mappedBy = "player", cascade = [CascadeType.ALL])
     val memberOf: List<Member> = emptyList(),
 

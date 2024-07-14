@@ -3,6 +3,7 @@ package com.esosa.f5pi_backend.services.implementations
 import com.esosa.f5pi_backend.controllers.requests.GenerateTeamsRequest
 import com.esosa.f5pi_backend.controllers.responses.GenerateTeamsResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.http.CustomHttpClient
 import com.esosa.f5pi_backend.services.interfaces.IAIService
@@ -35,14 +36,15 @@ class AIService(
             append(BASE_MESSAGE.trimIndent())
             generateTeamsRequest.playersId.forEach { playerId ->
                 val player = playerService.findPlayerByIdOrThrowException(playerId)
+                val playerStatistics = playerService.getPlayerStatistics(playerId)
                 playerByName[player.name] = player
-                append(player.listStatistics())
+                append(playerStatistics.listStatistics(player.name))
             }
         }
 
-    private fun Player.listStatistics(): String = """
-        |Name: $name, Total matches: ${playerStatistics.allGames}, 
-        |Wins: ${playerStatistics.allWins}, Goals scored: ${playerStatistics.allGoals}
+    private fun PlayerStatisticsResponse.listStatistics(playerName: String): String = """
+        |Name: $playerName, Total matches: $allGames, 
+        |Wins: $allWins, Goals scored: $allGoals
     """.trimMargin()
 
     private fun JsonNode.buildGenerateTeamsResponse(playerByName: Map<String, Player>): GenerateTeamsResponse {
