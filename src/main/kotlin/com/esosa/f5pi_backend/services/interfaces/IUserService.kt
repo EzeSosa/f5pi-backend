@@ -14,7 +14,14 @@ interface IUserService {
     fun findUserByUsernameOrThrowException(username: String): User
     fun findUserByIdOrThrowException(userId: UUID): User
     fun getUserPlayers(userId: UUID): List<PlayerResponse>
-    fun getUserGames(userId: UUID, dateFrom: LocalDate?, dateTo: LocalDate?, official: Boolean?): List<GameResponse>
+    fun getUserGames(
+        userId: UUID,
+        dateFrom: LocalDate?,
+        dateTo: LocalDate?,
+        official: Boolean?,
+        fieldId: UUID?,
+        seasonId: UUID?
+    ): List<GameResponse>
     fun getUserFields(userId: UUID): List<FieldResponse>
     fun getUserSeasons(userId: UUID): List<SeasonResponse>
 }

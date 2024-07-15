@@ -9,7 +9,9 @@ import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IUserRepository
+import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.IGameService
+import com.esosa.f5pi_backend.services.interfaces.ISeasonService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
 import org.springframework.context.annotation.Lazy
 import org.springframework.http.HttpStatus
@@ -21,7 +23,9 @@ import java.util.UUID
 @Service
 class UserService(
     private val userRepository: IUserRepository,
-    @Lazy private val gameService: IGameService
+    @Lazy private val gameService: IGameService,
+    @Lazy private val fieldService: IFieldService,
+    @Lazy private val seasonService: ISeasonService
 ) : IUserService {
 
     override fun saveUser(user: User): User =
@@ -45,9 +49,18 @@ class UserService(
             .players
             .map(Player::buildPlayerResponse)
 
-    override fun getUserGames(userId: UUID, dateFrom: LocalDate?, dateTo: LocalDate?, official: Boolean?): List<GameResponse> =
+    override fun getUserGames(
+        userId: UUID,
+        dateFrom: LocalDate?,
+        dateTo: LocalDate?,
+        official: Boolean?,
+        fieldId: UUID?,
+        seasonId: UUID?
+    ): List<GameResponse> =
         findUserByIdOrThrowException(userId).let { user ->
-            gameService.getGamesByUser(user, dateFrom, dateTo, official)
+            val field = fieldId?.let { fieldService.findFieldByIdOrThrowException(it) }
+            val season = seasonId?.let { seasonService.findSeasonByIdOrThrowException(it) }
+            gameService.getGamesByUser(user, dateFrom, dateTo, official, field, season)
         }
 
     override fun getUserFields(userId: UUID): List<FieldResponse> =

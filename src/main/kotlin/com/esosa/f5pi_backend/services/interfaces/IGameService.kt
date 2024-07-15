@@ -5,7 +5,9 @@ import com.esosa.f5pi_backend.controllers.requests.GameDetailsRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdateGameRequest
 import com.esosa.f5pi_backend.controllers.responses.GameDetailsResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
+import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
+import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import java.time.LocalDate
 import java.util.UUID
@@ -21,6 +23,8 @@ interface IGameService {
         user: User,
         dateFrom: LocalDate? = null,
         dateTo: LocalDate? = null,
-        official: Boolean? = null
+        official: Boolean? = null,
+        field: Field? = null,
+        season: Season? = null
     ): List<GameResponse>
 }
