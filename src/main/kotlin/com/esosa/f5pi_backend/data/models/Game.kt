@@ -12,7 +12,6 @@ import java.util.UUID
 @Entity
 data class Game(
     var date: LocalDate,
-    var official: Boolean,
     var individualPrice: Double,
 
     @ManyToOne
@@ -30,5 +29,5 @@ data class Game(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildGameResponse(): GameResponse = GameResponse(id, date, official, individualPrice, field.name)
+    fun buildGameResponse(): GameResponse = GameResponse(id, date, individualPrice, field.name)
 }

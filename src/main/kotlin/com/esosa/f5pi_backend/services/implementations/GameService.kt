@@ -67,7 +67,6 @@ class GameService(
         findGameByIdOrThrowException(gameId).let { game ->
             gameRepository.save(game.apply {
                 date = updateGameRequest.date
-                official = updateGameRequest.official
                 individualPrice = updateGameRequest.individualPrice
             }).buildGameResponse()
         }
@@ -85,11 +84,10 @@ class GameService(
         user: User,
         dateFrom: LocalDate?,
         dateTo: LocalDate?,
-        official: Boolean?,
         field: Field?,
         season: Season?
     ): List<GameResponse> =
-        gameRepository.findByUser(user, dateFrom, dateTo, official, field, season)
+        gameRepository.findByUser(user, dateFrom, dateTo, field, season)
             .map(Game::buildGameResponse)
 
     private fun ifGameDoesNotExistThrowException(gameId: UUID) {
@@ -110,5 +108,5 @@ class GameService(
     }
 
     private fun CreateGameRequest.buildGame(field: Field, user: User, season: Season) =
-        Game(date, official, individualPrice, field, season, user)
+        Game(date, individualPrice, field, season, user)
 }
