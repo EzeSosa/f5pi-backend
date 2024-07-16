@@ -5,6 +5,7 @@ import com.esosa.f5pi_backend.controllers.requests.GameDetailsRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdateGameRequest
 import com.esosa.f5pi_backend.controllers.responses.GameDetailsResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
+import com.esosa.f5pi_backend.data.enums.TeamResult
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.Season
@@ -48,9 +49,17 @@ class GameService(
 
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest) {
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
-        findGameByIdOrThrowException(gameId).let { game ->
-            gameDetailsRequest.teams
-                .forEach { teamRequest -> teamService.saveTeam(game.details, teamRequest, game.official, game.individualPrice) }
+
+        val game = findGameByIdOrThrowException(gameId)
+        val (team1Goals, team2Goals) = gameDetailsRequest.teams.map { team -> team.members.sumOf { it.goalsScored } }
+        val teamResults = when {
+            team1Goals > team2Goals -> TeamResult.WIN to TeamResult.LOSS
+            team2Goals > team1Goals -> TeamResult.LOSS to TeamResult.WIN
+            else -> TeamResult.DRAW to TeamResult.DRAW
+        }
+
+        gameDetailsRequest.teams.forEachIndexed { index, team ->
+            teamService.saveTeam(game.details, teamResults.toList()[index], team)
         }
     }
 
