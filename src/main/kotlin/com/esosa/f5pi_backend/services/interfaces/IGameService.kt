@@ -23,7 +23,6 @@ interface IGameService {
         user: User,
         dateFrom: LocalDate? = null,
         dateTo: LocalDate? = null,
-        official: Boolean? = null,
         field: Field? = null,
         season: Season? = null
     ): List<GameResponse>

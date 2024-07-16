@@ -10,9 +10,6 @@ data class CreateGameRequest(
     @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     val date: LocalDate,
 
-    @field:NotNull(message = "Official value must not be null")
-    val official: Boolean,
-
     @field:Min(value = 0, message = "Price must not be negative (that would be great!)")
     val individualPrice: Double,
 

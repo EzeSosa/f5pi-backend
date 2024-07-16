@@ -14,15 +14,13 @@ interface IGameRepository: JpaRepository<Game, UUID> {
             "g.user = ?1 " +
             "AND (?2 is null or g.date >= ?2) " +
             "AND (?3 is null or g.date <= ?3) " +
-            "AND (?4 is null or g.official = ?4) " +
-            "AND (?5 is null or g.field = ?5) " +
-            "AND (?6 is null or g.season = ?6)"
+            "AND (?5 is null or g.field = ?4) " +
+            "AND (?6 is null or g.season = ?5)"
     )
     fun findByUser(
         user: User,
         dateFrom: LocalDate?,
         dateTo: LocalDate?,
-        official: Boolean?,
         field: Field?,
         season: Season?
     ): List<Game>

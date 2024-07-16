@@ -60,7 +60,7 @@ class UserService(
         findUserByIdOrThrowException(userId).let { user ->
             val field = fieldId?.let { fieldService.findFieldByIdOrThrowException(it) }
             val season = seasonId?.let { seasonService.findSeasonByIdOrThrowException(it) }
-            gameService.getGamesByUser(user, dateFrom, dateTo, official, field, season)
+            gameService.getGamesByUser(user, dateFrom, dateTo, field, season)
         }
 
     override fun getUserFields(userId: UUID): List<FieldResponse> =
