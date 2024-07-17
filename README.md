@@ -19,7 +19,7 @@ Follow these steps to install and run the project:
 
   1. Clone the repository: `git clone https://github.com/EzeSosa/f5pi-backend.git`
   2. Navigate to the project directory: `cd your-repo`
-  3. Build the project using Grade: `gradle build`
+  3. Build the project using Gradle: `gradle build`
   4. Run the project: `gradle run`  /  `gradle bootRun`
   5. Test the API using Postman or another HTTP client at `http://localhost:8080`
 
