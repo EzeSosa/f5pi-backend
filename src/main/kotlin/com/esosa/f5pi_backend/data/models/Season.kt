@@ -23,5 +23,5 @@ data class Season(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildSeasonResponse() = SeasonResponse(name, initialDate, finalDate)
+    fun buildSeasonResponse() = SeasonResponse(id, name, initialDate, finalDate)
 }

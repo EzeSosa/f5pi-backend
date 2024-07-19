@@ -25,5 +25,5 @@ data class Team(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildTeamResponse(): TeamResponse = TeamResponse(members.map(Member::buildMemberResponse), result)
+    fun buildTeamResponse(): TeamResponse = TeamResponse(result, members.map(Member::buildMemberResponse))
 }
