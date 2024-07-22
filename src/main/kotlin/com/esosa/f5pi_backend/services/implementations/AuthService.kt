@@ -1,9 +1,11 @@
 package com.esosa.f5pi_backend.services.implementations
 
 import com.esosa.f5pi_backend.controllers.requests.AuthRequest
+import com.esosa.f5pi_backend.controllers.requests.CheckTokenRequest
 import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
 import com.esosa.f5pi_backend.controllers.responses.LoginResponse
 import com.esosa.f5pi_backend.controllers.responses.RefreshTokenResponse
+import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.security.jwt.JWTProperties
 import com.esosa.f5pi_backend.security.jwt.JWTService
@@ -18,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.util.Date
-import java.util.UUID
 
 @Service
 class AuthService(
@@ -45,19 +46,25 @@ class AuthService(
             val accessToken = generateAccessToken(user)
             val refreshToken = generateRefreshToken(user)
 
-            LoginResponse(username.extractId(), accessToken, refreshToken)
+            LoginResponse(username.extractUser().buildUserResponse(), accessToken, refreshToken)
         }
 
     override fun refreshToken(refreshTokenRequest: RefreshTokenRequest): RefreshTokenResponse =
         with(refreshTokenRequest) {
             jwtService.extractUsernameFromToken(refreshToken).let { username ->
                 val currentUserDetails = userDetailsService.loadUserByUsername(username)
-
-                if (!jwtService.isTokenValid(refreshToken, currentUserDetails))
-                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is not valid")
-
+                ifTokenInvalidThrowException(refreshToken, currentUserDetails)
                 RefreshTokenResponse(generateAccessToken(currentUserDetails))
             }
+        }
+
+    override fun checkToken(checkTokenRequest: CheckTokenRequest): UserResponse =
+        with(checkTokenRequest) {
+            val username = jwtService.extractUsernameFromToken(accessToken)
+            val userDetails = userDetailsService.loadUserByUsername(username)
+            ifTokenInvalidThrowException(accessToken, userDetails)
+            userService.findUserByUsernameOrThrowException(username)
+                .buildUserResponse()
         }
 
     private fun generateAccessToken(userDetails: UserDetails): String =
@@ -72,7 +79,12 @@ class AuthService(
             Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration)
         )
 
+    private fun ifTokenInvalidThrowException(token: String, userDetails: UserDetails) {
+        if (!jwtService.isTokenValid(token, userDetails))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is not valid")
+    }
+
     private fun AuthRequest.buildUser(): User = User(username, passwordEncoder.encode(password))
-    private fun String.extractId(): UUID = userService.findUserByUsernameOrThrowException(this).id
+    private fun String.extractUser(): User = userService.findUserByUsernameOrThrowException(this)
     private fun validateExistsUsername(username: String) = userService.ifExistsUsernameThrowException(username)
 }

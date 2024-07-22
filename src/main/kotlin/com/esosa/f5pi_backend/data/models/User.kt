@@ -1,8 +1,11 @@
 package com.esosa.f5pi_backend.data.models
 
+import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.data.enums.Role
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import java.util.UUID
@@ -28,4 +31,6 @@ data class User(
 
     @Id
     val id: UUID = UUID.randomUUID()
-)
+) {
+    fun buildUserResponse(): UserResponse = UserResponse(id, username, role.name)
+}
