@@ -1,9 +1,11 @@
 package com.esosa.f5pi_backend.services.implementations
 
+import com.esosa.f5pi_backend.controllers.requests.UpdateUserRequest
 import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
+import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.Season
@@ -72,4 +74,23 @@ class UserService(
         findUserByIdOrThrowException(userId)
             .seasons
             .map(Season::buildSeasonResponse)
+
+    override fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse =
+        findUserByIdOrThrowException(userId).let { user ->
+            userRepository.save(
+                user.apply {
+                    fullName = updateUserRequest.fullName
+                    email = updateUserRequest.email
+                }).buildUserResponse()
+        }
+
+    override fun deleteUser(userId: UUID) {
+        ifUserDoesNotExistThrowException(userId)
+        userRepository.deleteById(userId)
+    }
+
+    private fun ifUserDoesNotExistThrowException(userId: UUID) {
+        if (!userRepository.existsById(userId))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id $userId does not exist")
+    }
 }
