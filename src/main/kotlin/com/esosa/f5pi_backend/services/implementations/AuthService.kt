@@ -84,7 +84,7 @@ class AuthService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is not valid")
     }
 
-    private fun AuthRequest.buildUser(): User = User(username, passwordEncoder.encode(password))
+    private fun AuthRequest.buildUser(): User = User(username, passwordEncoder.encode(password), fullName, email)
     private fun String.extractUser(): User = userService.findUserByUsernameOrThrowException(this)
     private fun validateExistsUsername(username: String) = userService.ifExistsUsernameThrowException(username)
 }
