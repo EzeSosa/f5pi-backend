@@ -1,9 +1,11 @@
 package com.esosa.f5pi_backend.services.interfaces
 
+import com.esosa.f5pi_backend.controllers.requests.UpdateUserRequest
 import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
+import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.data.models.User
 import java.time.LocalDate
 import java.util.UUID
@@ -24,4 +26,6 @@ interface IUserService {
     ): List<GameResponse>
     fun getUserFields(userId: UUID): List<FieldResponse>
     fun getUserSeasons(userId: UUID): List<SeasonResponse>
+    fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse
+    fun deleteUser(userId: UUID)
 }

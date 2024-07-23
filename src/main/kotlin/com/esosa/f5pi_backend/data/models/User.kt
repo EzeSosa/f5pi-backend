@@ -12,8 +12,8 @@ import java.util.UUID
 data class User(
     val username: String,
     val password: String,
-    val fullName: String,
-    val email: String,
+    var fullName: String,
+    var email: String,
 
     val role: Role = Role.USER,
 
