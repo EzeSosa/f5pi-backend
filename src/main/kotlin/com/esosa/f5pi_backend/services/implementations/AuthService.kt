@@ -1,7 +1,8 @@
 package com.esosa.f5pi_backend.services.implementations
 
-import com.esosa.f5pi_backend.controllers.requests.AuthRequest
+import com.esosa.f5pi_backend.controllers.requests.RegisterRequest
 import com.esosa.f5pi_backend.controllers.requests.CheckTokenRequest
+import com.esosa.f5pi_backend.controllers.requests.LoginRequest
 import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
 import com.esosa.f5pi_backend.controllers.responses.LoginResponse
 import com.esosa.f5pi_backend.controllers.responses.RefreshTokenResponse
@@ -31,15 +32,15 @@ class AuthService(
     private val jwtProperties: JWTProperties
 ): IAuthService {
 
-    override fun register(authRequest: AuthRequest) {
-        with(authRequest) {
+    override fun register(registerRequest: RegisterRequest) {
+        with(registerRequest) {
             validateExistsUsername(username)
             userService.saveUser(buildUser())
         }
     }
 
-    override fun login(authRequest: AuthRequest): LoginResponse =
-        with(authRequest) {
+    override fun login(loginRequest: LoginRequest): LoginResponse =
+        with(loginRequest) {
             authManager.authenticate(UsernamePasswordAuthenticationToken(username, password))
 
             val user = userDetailsService.loadUserByUsername(username)
@@ -84,7 +85,7 @@ class AuthService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is not valid")
     }
 
-    private fun AuthRequest.buildUser(): User = User(username, passwordEncoder.encode(password), fullName, email)
+    private fun RegisterRequest.buildUser(): User = User(username, passwordEncoder.encode(password), fullName, email)
     private fun String.extractUser(): User = userService.findUserByUsernameOrThrowException(this)
     private fun validateExistsUsername(username: String) = userService.ifExistsUsernameThrowException(username)
 }
