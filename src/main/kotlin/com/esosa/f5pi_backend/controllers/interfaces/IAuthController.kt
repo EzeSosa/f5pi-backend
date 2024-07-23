@@ -1,7 +1,8 @@
 package com.esosa.f5pi_backend.controllers.interfaces
 
-import com.esosa.f5pi_backend.controllers.requests.AuthRequest
+import com.esosa.f5pi_backend.controllers.requests.RegisterRequest
 import com.esosa.f5pi_backend.controllers.requests.CheckTokenRequest
+import com.esosa.f5pi_backend.controllers.requests.LoginRequest
 import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
 import com.esosa.f5pi_backend.controllers.responses.LoginResponse
 import com.esosa.f5pi_backend.controllers.responses.RefreshTokenResponse
@@ -24,12 +25,12 @@ interface IAuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registers a new user")
-    fun register(@RequestBody @Valid authRequest: AuthRequest)
+    fun register(@RequestBody @Valid registerRequest: RegisterRequest)
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Authenticates an existent user")
-    fun login(@RequestBody @Valid authRequest: AuthRequest): LoginResponse
+    fun login(@RequestBody @Valid loginRequest: LoginRequest): LoginResponse
 
     @PostMapping("/refresh")
     @ResponseStatus(HttpStatus.CREATED)
