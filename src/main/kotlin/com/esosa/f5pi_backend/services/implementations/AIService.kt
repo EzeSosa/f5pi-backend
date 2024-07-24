@@ -10,6 +10,7 @@ import com.esosa.f5pi_backend.services.interfaces.IAIService
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 
 @Service
@@ -27,7 +28,7 @@ class AIService(
     override fun generateTeams(generateTeamsRequest: GenerateTeamsRequest): GenerateTeamsResponse {
         val playerByName = mutableMapOf<String, Player>()
         val requestMessage = buildRequestMessage(generateTeamsRequest, playerByName)
-        val jsonResponse = httpClient.doRequest(URL, QueryRequest(requestMessage))
+        val jsonResponse = httpClient.doRequest(URL, QueryRequest(requestMessage), HttpMethod.POST)
         return jsonResponse.buildGenerateTeamsResponse(playerByName)
     }
 
