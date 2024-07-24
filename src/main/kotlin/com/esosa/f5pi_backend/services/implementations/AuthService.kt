@@ -43,11 +43,12 @@ class AuthService(
         with(loginRequest) {
             authManager.authenticate(UsernamePasswordAuthenticationToken(username, password))
 
-            val user = userDetailsService.loadUserByUsername(username)
-            val accessToken = generateAccessToken(user)
-            val refreshToken = generateRefreshToken(user)
+            val userDetails = userDetailsService.loadUserByUsername(username)
+            val accessToken = generateAccessToken(userDetails)
+            val refreshToken = generateRefreshToken(userDetails)
+            val user = userService.findUserByUsernameOrThrowException(username)
 
-            LoginResponse(username.extractUser().buildUserResponse(), accessToken, refreshToken)
+            LoginResponse(user.buildUserResponse(), accessToken, refreshToken)
         }
 
     override fun refreshToken(refreshTokenRequest: RefreshTokenRequest): RefreshTokenResponse =
@@ -86,6 +87,5 @@ class AuthService(
     }
 
     private fun RegisterRequest.buildUser(): User = User(username, passwordEncoder.encode(password), fullName, email)
-    private fun String.extractUser(): User = userService.findUserByUsernameOrThrowException(this)
     private fun validateExistsUsername(username: String) = userService.ifExistsUsernameThrowException(username)
 }
