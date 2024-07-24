@@ -9,6 +9,7 @@ import com.esosa.f5pi_backend.http.CustomHttpClient
 import com.esosa.f5pi_backend.services.interfaces.IAIService
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
 import com.fasterxml.jackson.databind.JsonNode
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,12 +18,11 @@ class AIService(
     private val httpClient: CustomHttpClient
 ) : IAIService {
 
-    private val BASE_MESSAGE = """
-        Generate two balanced teams with 5 players based on their matches played, their wins and their 
-        goals scored. Balanced means the two teams have to have the same skill level, so the best players
-        must be separated. Here is the list of the players and their stats:
-        """
-    private val URL = "http://127.0.0.1:5000/generate-teams"
+    @Value("\${ai.message}")
+    lateinit var BASE_MESSAGE: String
+
+    @Value("\${ai.url}")
+    lateinit var URL: String
 
     override fun generateTeams(generateTeamsRequest: GenerateTeamsRequest): GenerateTeamsResponse {
         val playerByName = mutableMapOf<String, Player>()

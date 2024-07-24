@@ -13,7 +13,7 @@ cors:
   originPatterns: ${CORS_ORIGINS:http://localhost:4200}
 
 jwt:
-  key: ${JWT_KEY:2CDFK2MJKLAM2KJCP2KLMCKJADJK2KLASMCJKD2KJKADKJJK2KCKJDS22}
+  key: ${JWT_KEY:SgHeAYlgQ+JozW6vY7xxsPQXuvvqSDL+6PiBkpr1KvA=}
   access-token-expiration: 3600000
   refresh-token-expiration: 432000000
 
@@ -21,3 +21,9 @@ springdoc:
   swagger-ui:
     disable-swagger-default-url: true
     path: /
+
+ai:
+  url: ${AI_SERVICE_URL:http://127.0.0.1:5000/generate-teams}
+  message: ${AI_MESSAGE:Generate two balanced teams with 5 players based on their matches played, their wins and their
+    goals scored. Balanced means the two teams have to have the same skill level, so the best players
+    must be separated. Here is the list of the players and their stats:}
