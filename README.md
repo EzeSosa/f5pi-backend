@@ -23,6 +23,8 @@ Follow these steps to install and run the project:
   4. Run the project: `gradle run`  /  `gradle bootRun`
   5. Test the API using Postman or another HTTP client at `http://localhost:8080`
 
+Notice that since we are using MySQL, you should create your own database and configure it on [application.yaml](src/main/resources/application.yaml).
+
 ## Documentation
 
 You can check the diagrams [here](https://drive.google.com/file/d/1Xlo026uR5pw-gH_z2-L-rMYFmXvMW0xo/).
