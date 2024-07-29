@@ -32,7 +32,7 @@ interface ISeasonController {
     @Operation(summary = "Updates an existent season for a registered user")
     fun updateSeason(@PathVariable seasonId: UUID, @RequestBody @Valid updateSeasonRequest: UpdateSeasonRequest): SeasonResponse
 
-    @DeleteMapping("/{fieldId}")
+    @DeleteMapping("/{seasonId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Deletes an existent season for a registered user")
     fun deleteSeason(@PathVariable seasonId: UUID)

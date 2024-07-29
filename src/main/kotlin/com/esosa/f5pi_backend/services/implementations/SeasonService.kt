@@ -45,7 +45,7 @@ class SeasonService(
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Season with id $seasonId does not exist") }
 
     private fun ifSeasonDoesNotExistThrowException(seasonId: UUID) {
-        if (seasonRepository.existsById(seasonId))
+        if (!seasonRepository.existsById(seasonId))
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Season with id $seasonId does not exist")
     }
 
