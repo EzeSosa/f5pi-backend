@@ -20,5 +20,5 @@ class MemberService(
         memberRepository.save(memberRequest.buildMember(team, player))
     }
 
-    private fun MemberRequest.buildMember(team: Team, player: Player): Member = Member(goalsScored, team, player)
+    private fun MemberRequest.buildMember(team: Team, player: Player): Member = Member(goalsScored, ownGoals, team, player)
 }
