@@ -38,7 +38,6 @@ interface IUserController {
         @PathVariable userId: UUID,
         @RequestParam dateFrom: LocalDate?,
         @RequestParam dateTo: LocalDate?,
-        @RequestParam official: Boolean?,
         @RequestParam fieldId: UUID?,
         @RequestParam seasonId: UUID?
     ): List<GameResponse>

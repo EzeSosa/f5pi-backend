@@ -55,7 +55,6 @@ class UserService(
         userId: UUID,
         dateFrom: LocalDate?,
         dateTo: LocalDate?,
-        official: Boolean?,
         fieldId: UUID?,
         seasonId: UUID?
     ): List<GameResponse> =
