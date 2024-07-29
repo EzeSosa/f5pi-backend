@@ -13,6 +13,7 @@ interface IPlayerRepository: JpaRepository<Player, UUID> {
     @Query("SELECT new com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse("
             + "CAST(COUNT(g) AS long), "
             + "CAST(SUM(m.goalsScored) AS long), "
+            + "CAST(SUM(m.ownGoals) AS long), "
             + "CAST(SUM(CASE WHEN t.result = 'WIN' THEN 1 ELSE 0 END) AS long), "
             + "CAST(SUM(CASE WHEN t.result = 'DRAW' THEN 1 ELSE 0 END) AS long), "
             + "CAST(SUM(CASE WHEN t.result = 'LOSS' THEN 1 ELSE 0 END) AS long), "
