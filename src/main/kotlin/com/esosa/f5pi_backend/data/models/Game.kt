@@ -29,5 +29,5 @@ data class Game(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildGameResponse(): GameResponse = GameResponse(id, date, individualPrice, field.name)
+    fun buildGameResponse(): GameResponse = GameResponse(id, date, individualPrice, field.name, season.name)
 }

@@ -7,5 +7,6 @@ data class GameResponse(
     val gameId: UUID,
     val date: LocalDate,
     val individualPrice: Double,
-    val fieldName: String
+    val field: String,
+    val season: String
 )
