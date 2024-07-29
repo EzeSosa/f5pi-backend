@@ -15,6 +15,7 @@ import java.util.UUID
 data class Team(
     @Enumerated(value = EnumType.STRING)
     val result: TeamResult,
+    val goals: Int,
 
     @ManyToOne
     val gameDetails: GameDetails,
@@ -25,5 +26,5 @@ data class Team(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildTeamResponse(): TeamResponse = TeamResponse(result, members.map(Member::buildMemberResponse))
+    fun buildTeamResponse(): TeamResponse = TeamResponse(result, goals, members.map(Member::buildMemberResponse))
 }

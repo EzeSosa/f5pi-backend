@@ -52,11 +52,11 @@ class GameService(
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
 
         val game = findGameByIdOrThrowException(gameId)
-        val (team1Goals, team2Goals) = calculateTeamGoals(gameDetailsRequest.teams)
-        val teamResults = determineTeamResults(team1Goals, team2Goals)
+        val teamGoals = calculateTeamGoals(gameDetailsRequest.teams)
+        val teamResults = determineTeamResults(teamGoals)
 
         gameDetailsRequest.teams.forEachIndexed { index, team ->
-            teamService.saveTeam(game.details, teamResults.toList()[index], team)
+            teamService.saveTeam(game.details, teamResults.toList()[index], teamGoals.toList()[index], team)
         }
     }
 
@@ -93,10 +93,10 @@ class GameService(
         return team1Goals to team2Goals
     }
 
-    private fun determineTeamResults(team1Goals: Int, team2Goals: Int): Pair<TeamResult, TeamResult> =
+    private fun determineTeamResults(teamGoals: Pair<Int, Int>): Pair<TeamResult, TeamResult> =
         when {
-            team1Goals > team2Goals -> TeamResult.WIN to TeamResult.LOSS
-            team2Goals > team1Goals -> TeamResult.LOSS to TeamResult.WIN
+            teamGoals.first > teamGoals.second -> TeamResult.WIN to TeamResult.LOSS
+            teamGoals.second > teamGoals.first -> TeamResult.LOSS to TeamResult.WIN
             else -> TeamResult.DRAW to TeamResult.DRAW
         }
 

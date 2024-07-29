@@ -15,13 +15,13 @@ class TeamService(
     private val memberService: IMemberService
 ) : ITeamService {
 
-    override fun saveTeam(gameDetails: GameDetails, teamResult: TeamResult, teamRequest: TeamRequest) {
-        teamRepository.save(buildTeam(teamResult, gameDetails)).let { team ->
+    override fun saveTeam(gameDetails: GameDetails, teamResult: TeamResult, teamGoals: Int, teamRequest: TeamRequest) {
+        teamRepository.save(buildTeam(teamResult, teamGoals, gameDetails)).let { team ->
             teamRequest.members
                 .forEach { memberRequest -> memberService.saveMember(team, memberRequest) }
         }
     }
 
-    private fun buildTeam(teamResult: TeamResult, gameDetails: GameDetails): Team =
-        Team(teamResult, gameDetails)
+    private fun buildTeam(teamResult: TeamResult, teamGoals: Int, gameDetails: GameDetails): Team =
+        Team(teamResult, teamGoals, gameDetails)
 }
