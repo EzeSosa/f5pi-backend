@@ -9,5 +9,8 @@ data class MemberRequest(
     val playerId: UUID,
 
     @field:Min(value = 0, message = "Goals scored must be 0 or positive")
-    val goalsScored: Int
+    val goalsScored: Int,
+
+    @field:Min(value = 0, message = "Own goals scored must be 0 or positive")
+    val ownGoals: Int
 )

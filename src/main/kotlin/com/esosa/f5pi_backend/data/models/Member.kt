@@ -9,6 +9,7 @@ import java.util.UUID
 @Entity
 data class Member(
     val goalsScored: Int,
+    val ownGoals: Int,
 
     @ManyToOne
     val team: Team,
@@ -19,5 +20,5 @@ data class Member(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildMemberResponse(): MemberResponse = MemberResponse(player.name, goalsScored)
+    fun buildMemberResponse(): MemberResponse = MemberResponse(player.name, goalsScored, ownGoals)
 }

@@ -2,6 +2,7 @@ package com.esosa.f5pi_backend.services.implementations
 
 import com.esosa.f5pi_backend.controllers.requests.CreateGameRequest
 import com.esosa.f5pi_backend.controllers.requests.GameDetailsRequest
+import com.esosa.f5pi_backend.controllers.requests.TeamRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdateGameRequest
 import com.esosa.f5pi_backend.controllers.responses.GameDetailsResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
@@ -51,12 +52,8 @@ class GameService(
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
 
         val game = findGameByIdOrThrowException(gameId)
-        val (team1Goals, team2Goals) = gameDetailsRequest.teams.map { team -> team.members.sumOf { it.goalsScored } }
-        val teamResults = when {
-            team1Goals > team2Goals -> TeamResult.WIN to TeamResult.LOSS
-            team2Goals > team1Goals -> TeamResult.LOSS to TeamResult.WIN
-            else -> TeamResult.DRAW to TeamResult.DRAW
-        }
+        val (team1Goals, team2Goals) = calculateTeamGoals(gameDetailsRequest.teams)
+        val teamResults = determineTeamResults(team1Goals, team2Goals)
 
         gameDetailsRequest.teams.forEachIndexed { index, team ->
             teamService.saveTeam(game.details, teamResults.toList()[index], team)
@@ -89,6 +86,19 @@ class GameService(
     ): List<GameResponse> =
         gameRepository.findByUser(user, dateFrom, dateTo, field, season)
             .map(Game::buildGameResponse)
+
+    private fun calculateTeamGoals(teams: List<TeamRequest>): Pair<Int, Int> {
+        val team1Goals = teams[0].members.sumOf { it.goalsScored } + teams[1].members.sumOf { it.ownGoals }
+        val team2Goals = teams[1].members.sumOf { it.goalsScored } + teams[0].members.sumOf { it.ownGoals }
+        return team1Goals to team2Goals
+    }
+
+    private fun determineTeamResults(team1Goals: Int, team2Goals: Int): Pair<TeamResult, TeamResult> =
+        when {
+            team1Goals > team2Goals -> TeamResult.WIN to TeamResult.LOSS
+            team2Goals > team1Goals -> TeamResult.LOSS to TeamResult.WIN
+            else -> TeamResult.DRAW to TeamResult.DRAW
+        }
 
     private fun ifGameDoesNotExistThrowException(gameId: UUID) {
         if (!gameRepository.existsById(gameId))
