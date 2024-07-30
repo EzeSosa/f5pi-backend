@@ -7,6 +7,7 @@ import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
 import com.esosa.f5pi_backend.controllers.responses.LoginResponse
 import com.esosa.f5pi_backend.controllers.responses.RefreshTokenResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
+import com.esosa.f5pi_backend.data.enums.TokenType
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.security.jwt.JWTProperties
 import com.esosa.f5pi_backend.security.jwt.JWTService
@@ -72,14 +73,19 @@ class AuthService(
     private fun generateAccessToken(userDetails: UserDetails): String =
         jwtService.generateToken(
             userDetails,
-            Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
+            Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration),
+            generateTokenTypeClaim(TokenType.ACCESS)
         )
 
     private fun generateRefreshToken(userDetails: UserDetails): String =
         jwtService.generateToken(
             userDetails,
-            Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration)
+            Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration),
+            generateTokenTypeClaim(TokenType.REFRESH)
         )
+
+    private fun generateTokenTypeClaim(tokenType: TokenType): Map<String, Any> =
+        hashMapOf( Pair("tokenType", tokenType) )
 
     private fun ifTokenInvalidThrowException(token: String, userDetails: UserDetails) {
         if (!jwtService.isTokenValid(token, userDetails))
