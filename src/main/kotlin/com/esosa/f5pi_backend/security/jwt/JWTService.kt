@@ -28,6 +28,9 @@ class JWTService(jwtProperties: JWTProperties) {
     fun isTokenValid(token: String, userDetails: UserDetails): Boolean =
         !isTokenExpired(token) && subjectEqualsUsername(token, userDetails)
 
+    fun extractTokenTypeFromToken(token: String) =
+        getAllClaimsFromToken(token)["tokenType"]
+
     private fun subjectEqualsUsername(token: String, userDetails: UserDetails): Boolean =
         getAllClaimsFromToken(token)
             .subject == userDetails.username
