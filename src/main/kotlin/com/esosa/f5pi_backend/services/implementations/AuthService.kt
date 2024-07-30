@@ -57,6 +57,7 @@ class AuthService(
             jwtService.extractUsernameFromToken(refreshToken).let { username ->
                 val currentUserDetails = userDetailsService.loadUserByUsername(username)
                 ifTokenInvalidThrowException(refreshToken, currentUserDetails)
+                ifNotRefreshTokenThrowException(refreshToken)
                 RefreshTokenResponse(generateAccessToken(currentUserDetails))
             }
         }
@@ -89,7 +90,12 @@ class AuthService(
 
     private fun ifTokenInvalidThrowException(token: String, userDetails: UserDetails) {
         if (!jwtService.isTokenValid(token, userDetails))
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is not valid")
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not valid")
+    }
+
+    private fun ifNotRefreshTokenThrowException(token: String) {
+        if (jwtService.extractTokenTypeFromToken(token) != "REFRESH")
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not a refresh token")
     }
 
     private fun RegisterRequest.buildUser(): User = User(username, passwordEncoder.encode(password), fullName, email)
