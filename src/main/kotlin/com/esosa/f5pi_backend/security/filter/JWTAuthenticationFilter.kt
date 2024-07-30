@@ -37,7 +37,7 @@ class JWTAuthenticationFilter(
         if (SecurityContextHolder.getContext().authentication == null) {
             val user = userDetailsService.loadUserByUsername(username)
 
-            if (jwtService.isTokenValid(token, user))
+            if (jwtService.isTokenValid(token, user) && jwtService.extractTokenTypeFromToken(token)!! == "ACCESS")
                 updateContext(user, request)
 
             filterChain.doFilter(request, response)
