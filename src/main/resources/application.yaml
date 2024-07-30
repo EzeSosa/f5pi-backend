@@ -24,6 +24,6 @@ springdoc:
 
 ai:
   url: ${AI_SERVICE_URL:http://127.0.0.1:5000/generate-teams}
-  message: ${AI_MESSAGE:Generate two balanced teams with 5 players based on their matches played, their wins and their
-    goals scored. Balanced means the two teams have to have the same skill level, so the best players
-    must be separated. Here is the list of the players and their stats:}
+  message: ${AI_MESSAGE:Generate two balanced teams with 5 players based on their matches played, their wins, their
+    goals scored and their own goals. Balanced means the two teams have to have the same skill level, so the best 
+    players must be separated. Here is the list of the players and their stats:}

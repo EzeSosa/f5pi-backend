@@ -46,7 +46,7 @@ class AIService(
     private fun PlayerStatisticsResponse.listStatistics(playerName: String): String = """
         |Name: $playerName, Total matches: $games, 
         |Wins: $wins, Draws: $draws, Losses: $losses,
-        |Goals scored: $goals
+        |Goals scored: $goals, Own goals: $ownGoals
     """.trimMargin()
 
     private fun JsonNode.buildGenerateTeamsResponse(playerByName: Map<String, Player>): GenerateTeamsResponse {
