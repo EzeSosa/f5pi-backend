@@ -13,13 +13,12 @@ class JWTService(jwtProperties: JWTProperties) {
         jwtProperties.key.toByteArray()
     )
 
-    fun generateToken(userDetails: UserDetails, expirationDate: Date): String =
+    fun generateToken(userDetails: UserDetails, expirationDate: Date, extraClaims: Map<String, Any>): String =
         Jwts.builder()
-            .claims()
+            .claims(extraClaims)
             .subject(userDetails.username)
             .issuedAt(Date(System.currentTimeMillis()))
             .expiration(expirationDate)
-            .and()
             .signWith(secretKey)
             .compact()
 
