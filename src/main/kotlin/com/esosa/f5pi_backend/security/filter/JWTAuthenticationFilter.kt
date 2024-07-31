@@ -11,7 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
+import org.springframework.util.AntPathMatcher
 import org.springframework.web.filter.OncePerRequestFilter
+import com.esosa.f5pi_backend.utils.WHITE_LIST_URL
 
 @Component
 class JWTAuthenticationFilter(
@@ -43,6 +45,9 @@ class JWTAuthenticationFilter(
             filterChain.doFilter(request, response)
         }
     }
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean =
+        WHITE_LIST_URL.any { url -> AntPathMatcher().match(url, request.requestURI) }
 
     private fun updateContext(user: UserDetails, request: HttpServletRequest) {
         val authToken = UsernamePasswordAuthenticationToken(user, null, user.authorities)

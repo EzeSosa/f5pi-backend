@@ -10,18 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import com.esosa.f5pi_backend.utils.WHITE_LIST_URL
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
     private val authProvider: AuthenticationProvider,
 ) {
-    private val WHITE_LIST_URL = arrayOf(
-        "/auth/**",
-        "/swagger-ui/**",
-        "/v3/api-docs/**",
-        "/",
-    )
 
     @Bean
     fun securityFilterChain(
