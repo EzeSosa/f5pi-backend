@@ -4,7 +4,7 @@ spring:
     hibernate:
       ddl-auto: ${DDL_AUTO:update}
   datasource:
-    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/f5pi}
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/f5pi
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
     driver-class-name: com.mysql.cj.jdbc.Driver
