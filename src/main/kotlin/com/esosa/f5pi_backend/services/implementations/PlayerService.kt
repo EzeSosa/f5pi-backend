@@ -8,6 +8,7 @@ import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.repositories.IPlayerRepository
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.services.interfaces.*
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -23,6 +24,9 @@ class PlayerService(
     private val fileUploadService: IFileUploadService
 ) : IPlayerService {
 
+    @Value("\${cloudinary.default-image-url}")
+    lateinit var DEFAULT_IMAGE_URL: String
+
     override fun getPlayerStatistics(playerId: UUID, fieldId: UUID?, seasonId: UUID?): PlayerStatisticsResponse {
         val field = fieldId?.let { fieldService.findFieldByIdOrThrowException(it) }
         val season = seasonId?.let { seasonService.findSeasonByIdOrThrowException(it) }
@@ -33,7 +37,10 @@ class PlayerService(
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         with(createPlayerRequest) {
             val user = userService.findUserByIdOrThrowException(userId)
-            val imageURL = image?.let { uploadPlayerImage(it) }
+            val imageURL = image
+                ?.let { uploadPlayerImage(it) }
+                ?: DEFAULT_IMAGE_URL
+
             playerRepository.save(buildPlayer(user, imageURL))
                 .buildPlayerResponse()
         }
@@ -42,7 +49,7 @@ class PlayerService(
         findPlayerByIdOrThrowException(playerId).let { player ->
             playerRepository.save(player.apply {
                 name = updatePlayerRequest.name
-                imageURL = updatePlayerRequest.imageURL
+                updatePlayerRequest.image?.let { imageURL = uploadPlayerImage(it) }
             }).buildPlayerResponse()
         }
 
@@ -63,5 +70,5 @@ class PlayerService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist")
     }
 
-    private fun CreatePlayerRequest.buildPlayer(user: User, imageURL: String?): Player = Player(name, user, imageURL)
+    private fun CreatePlayerRequest.buildPlayer(user: User, imageURL: String): Player = Player(name, user, imageURL)
 }

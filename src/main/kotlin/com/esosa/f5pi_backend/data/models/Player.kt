@@ -15,7 +15,7 @@ data class Player(
     @ManyToOne
     val user: User,
 
-    var imageURL: String?,
+    var imageURL: String,
 
     @OneToMany(mappedBy = "player", cascade = [CascadeType.ALL])
     val memberOf: List<Member> = emptyList(),

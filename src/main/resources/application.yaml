@@ -32,3 +32,4 @@ cloudinary:
   cloud-name: ${CLOUDINARY_NAME:dlomx8sc1}
   api-key: ${CLOUDINARY_API_KEY:363723365928819}
   api-secret: ${CLOUDINARY_API_SECRET:z1aLT2IRKpN97R8vMYNZAvFYG68}
+  default-image-url: ${DEFAULT_IMAGE_URL:http://res.cloudinary.com/dlomx8sc1/image/upload/v1723231116/ae2c845b-8b2a-4585-8be7-5a2860bb28f7.png}
