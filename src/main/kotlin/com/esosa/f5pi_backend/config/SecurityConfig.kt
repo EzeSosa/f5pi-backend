@@ -29,7 +29,7 @@ class SecurityConfig(
                 httpRequests
                     .requestMatchers(*WHITE_LIST_URL).permitAll()
                     .requestMatchers(HttpMethod.GET, "api/v1/**").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
             }
             .sessionManagement { management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .httpBasic { httpBasic -> httpBasic.disable() }
