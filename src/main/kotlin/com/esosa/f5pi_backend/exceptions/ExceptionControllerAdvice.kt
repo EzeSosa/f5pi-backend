@@ -1,6 +1,8 @@
 package com.esosa.f5pi_backend.exceptions
 
 import io.jsonwebtoken.JwtException
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException
+import org.apache.tomcat.util.http.fileupload.impl.FileUploadIOException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.BadCredentialsException
@@ -65,6 +67,24 @@ class ExceptionControllerAdvice {
         ExceptionPayload(
             message = "Username does not exist.",
             status = HttpStatus.BAD_REQUEST.value(),
+            trace = ex.stackTrace
+        )
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(FileSizeLimitExceededException::class)
+    fun handleFileSizeLimitExceededException(ex: FileSizeLimitExceededException): ExceptionPayload =
+        ExceptionPayload(
+            message = "The maximum file size is 10MB.",
+            status = HttpStatus.BAD_REQUEST.value(),
+            trace = ex.stackTrace
+        )
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(FileUploadIOException::class)
+    fun handleFileUploadIOException(ex: FileUploadIOException): ExceptionPayload =
+        ExceptionPayload(
+            message = "There was a problem uploading the image. Contact an administrator.",
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             trace = ex.stackTrace
         )
 }
