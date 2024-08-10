@@ -20,5 +20,5 @@ data class Member(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
-    fun buildMemberResponse(): MemberResponse = MemberResponse(player.name, goalsScored, ownGoals)
+    fun buildMemberResponse(): MemberResponse = MemberResponse(player.name, player.imageURL, goalsScored, ownGoals)
 }
