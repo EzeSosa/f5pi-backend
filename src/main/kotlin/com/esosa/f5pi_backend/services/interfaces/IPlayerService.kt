@@ -5,6 +5,7 @@ import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.data.models.Player
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 interface IPlayerService {
@@ -14,6 +15,7 @@ interface IPlayerService {
         seasonId: UUID? = null
     ): PlayerStatisticsResponse
     fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse
+    fun savePlayerImage(playerId: UUID, multiPartFile: MultipartFile)
     fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse
     fun deletePlayer(playerId: UUID)
     fun findPlayerByIdOrThrowException(playerId: UUID): Player

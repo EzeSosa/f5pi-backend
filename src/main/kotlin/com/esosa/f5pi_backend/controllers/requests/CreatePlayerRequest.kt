@@ -3,7 +3,6 @@ package com.esosa.f5pi_backend.controllers.requests
 import jakarta.validation.constraints.Size
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 data class CreatePlayerRequest(
@@ -13,6 +12,4 @@ data class CreatePlayerRequest(
 
     @field:NotNull(message = "User id must not be null")
     val userId: UUID,
-
-    val image: MultipartFile?
 )

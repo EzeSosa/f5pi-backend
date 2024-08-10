@@ -37,19 +37,25 @@ class PlayerService(
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         with(createPlayerRequest) {
             val user = userService.findUserByIdOrThrowException(userId)
-            val imageURL = image
-                ?.let { uploadPlayerImage(it) }
-                ?: DEFAULT_IMAGE_URL
-
-            playerRepository.save(buildPlayer(user, imageURL))
+            playerRepository.save(buildPlayer(user, DEFAULT_IMAGE_URL))
                 .buildPlayerResponse()
         }
 
-    override fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse =
+    override fun savePlayerImage(playerId: UUID, multiPartFile: MultipartFile) {
+        findPlayerByIdOrThrowException(playerId).let { player ->
+            playerRepository.save(player.apply {
+                imageURL = uploadPlayerImage(multiPartFile)
+            })
+        }
+    }
+
+    override fun updatePlayer(
+        playerId: UUID,
+        updatePlayerRequest: UpdatePlayerRequest
+    ): PlayerResponse =
         findPlayerByIdOrThrowException(playerId).let { player ->
             playerRepository.save(player.apply {
                 name = updatePlayerRequest.name
-                updatePlayerRequest.image?.let { imageURL = uploadPlayerImage(it) }
             }).buildPlayerResponse()
         }
 
