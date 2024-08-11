@@ -10,7 +10,7 @@ import java.util.UUID
 @Entity
 data class GameDetails(
     @OneToMany(mappedBy = "gameDetails", cascade = [CascadeType.ALL])
-    val teams: List<Team> = emptyList(),
+    val teams: MutableList<Team> = mutableListOf(),
 
     @Id
     val id: UUID = UUID.randomUUID()
