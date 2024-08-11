@@ -4,6 +4,7 @@ import com.esosa.f5pi_backend.controllers.requests.CreatePlayerRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
+import com.esosa.f5pi_backend.controllers.responses.SavePlayerImageResponse
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.repositories.IPlayerRepository
 import com.esosa.f5pi_backend.data.models.User
@@ -41,13 +42,12 @@ class PlayerService(
                 .buildPlayerResponse()
         }
 
-    override fun savePlayerImage(playerId: UUID, multiPartFile: MultipartFile) {
+    override fun savePlayerImage(playerId: UUID, multiPartFile: MultipartFile): SavePlayerImageResponse =
         findPlayerByIdOrThrowException(playerId).let { player ->
-            playerRepository.save(player.apply {
-                imageURL = uploadPlayerImage(multiPartFile)
-            })
+            val imageURL = uploadPlayerImage(multiPartFile)
+            playerRepository.save(player.apply { this.imageURL = imageURL })
+            return@let SavePlayerImageResponse(imageURL)
         }
-    }
 
     override fun updatePlayer(
         playerId: UUID,
