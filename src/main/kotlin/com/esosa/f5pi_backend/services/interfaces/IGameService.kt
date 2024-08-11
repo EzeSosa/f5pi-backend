@@ -15,7 +15,7 @@ import java.util.UUID
 interface IGameService {
     fun getGameDetails(gameId: UUID): GameDetailsResponse
     fun saveGame(createGameRequest: CreateGameRequest): GameResponse
-    fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest)
+    fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest): GameDetailsResponse
     fun updateGame(gameId: UUID, updateGameRequest: UpdateGameRequest): GameResponse
     fun deleteGame(gameId: UUID)
     fun findGameByIdOrThrowException(gameId: UUID): Game

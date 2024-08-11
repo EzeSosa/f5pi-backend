@@ -21,7 +21,7 @@ data class Team(
     val gameDetails: GameDetails,
 
     @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL])
-    val members: List<Member> = emptyList(),
+    val members: MutableList<Member> = mutableListOf(),
 
     @Id
     val id: UUID = UUID.randomUUID()

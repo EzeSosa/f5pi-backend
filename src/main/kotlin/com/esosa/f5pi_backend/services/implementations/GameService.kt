@@ -48,7 +48,7 @@ class GameService(
                 .buildGameResponse()
         }
 
-    override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest) {
+    override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest): GameDetailsResponse {
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
 
         val game = findGameByIdOrThrowException(gameId)
@@ -58,6 +58,9 @@ class GameService(
         gameDetailsRequest.teams.forEachIndexed { index, team ->
             teamService.saveTeam(game.details, teamResults.toList()[index], teamGoals.toList()[index], team)
         }
+
+        return game.details
+            .buildGameDetailsResponse()
     }
 
     override fun updateGame(gameId: UUID, updateGameRequest: UpdateGameRequest): GameResponse =

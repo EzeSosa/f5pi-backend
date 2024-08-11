@@ -38,7 +38,7 @@ interface IGameController {
     @PostMapping("/{gameId}/detail")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registers the details of an existent game")
-    fun saveGameDetails(@PathVariable gameId: UUID, @RequestBody @Valid gameDetailsRequest: GameDetailsRequest)
+    fun saveGameDetails(@PathVariable gameId: UUID, @RequestBody @Valid gameDetailsRequest: GameDetailsRequest): GameDetailsResponse
 
     @PatchMapping("/{gameId}")
     @ResponseStatus(HttpStatus.OK)

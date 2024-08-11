@@ -18,7 +18,7 @@ class GameController(private val gameService: IGameService) : IGameController {
     override fun saveGame(createGameRequest: CreateGameRequest): GameResponse =
         gameService.saveGame(createGameRequest)
 
-    override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest) =
+    override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest): GameDetailsResponse =
         gameService.saveGameDetails(gameId, gameDetailsRequest)
 
     override fun updateGame(gameId: UUID, updateGameRequest: UpdateGameRequest): GameResponse =
