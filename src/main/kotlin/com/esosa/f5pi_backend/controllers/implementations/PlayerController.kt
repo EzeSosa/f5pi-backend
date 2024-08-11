@@ -5,6 +5,7 @@ import com.esosa.f5pi_backend.controllers.requests.CreatePlayerRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
+import com.esosa.f5pi_backend.controllers.responses.SavePlayerImageResponse
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -22,7 +23,7 @@ class PlayerController(private val playerService: IPlayerService) : IPlayerContr
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         playerService.savePlayer(createPlayerRequest)
 
-    override fun savePlayerImage(playerId: UUID, multiPartFile: MultipartFile) =
+    override fun savePlayerImage(playerId: UUID, multiPartFile: MultipartFile): SavePlayerImageResponse =
         playerService.savePlayerImage(playerId, multiPartFile)
 
     override fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse =

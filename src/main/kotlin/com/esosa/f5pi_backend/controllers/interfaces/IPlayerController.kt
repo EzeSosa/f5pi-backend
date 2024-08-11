@@ -4,6 +4,7 @@ import com.esosa.f5pi_backend.controllers.requests.CreatePlayerRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdatePlayerRequest
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
+import com.esosa.f5pi_backend.controllers.responses.SavePlayerImageResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -48,7 +49,7 @@ interface IPlayerController {
     fun savePlayerImage(
         @PathVariable playerId: UUID,
         @ModelAttribute multiPartFile: MultipartFile
-    )
+    ): SavePlayerImageResponse
 
     @PatchMapping("/{playerId}")
     @ResponseStatus(HttpStatus.OK)
