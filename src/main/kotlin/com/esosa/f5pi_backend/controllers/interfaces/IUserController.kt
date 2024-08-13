@@ -8,6 +8,7 @@ import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,11 @@ interface IUserController {
     @GetMapping("/{userId}/fields")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Fetches a registered user fields")
-    fun getUserFields(@PathVariable userId: UUID): List<FieldResponse>
+    fun getUserFields(
+        @PathVariable userId: UUID,
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int
+    ): Page<FieldResponse>
 
     @GetMapping("/{userId}/seasons")
     @ResponseStatus(HttpStatus.OK)
