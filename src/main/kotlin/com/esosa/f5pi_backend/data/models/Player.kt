@@ -6,6 +6,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
@@ -16,6 +17,8 @@ data class Player(
     val user: User,
 
     var imageURL: String,
+
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @OneToMany(mappedBy = "player", cascade = [CascadeType.ALL])
     val memberOf: List<Member> = emptyList(),
