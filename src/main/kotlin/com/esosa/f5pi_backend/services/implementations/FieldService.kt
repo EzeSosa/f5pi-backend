@@ -8,6 +8,8 @@ import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IFieldRepository
 import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
+import com.esosa.f5pi_backend.utils.PageMapper
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -41,6 +43,10 @@ class FieldService(
     override fun findFieldByIdOrThrowException(fieldId: UUID): Field =
         fieldRepository.findById(fieldId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Field with id $fieldId does not exist") }
+
+    override fun getUserFields(user: User, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
+        fieldRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize), user )
+            .map(Field::buildFieldResponse)
 
     private fun ifFieldDoesNotExistThrowException(fieldId: UUID) {
         if (!fieldRepository.existsById(fieldId))

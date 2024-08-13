@@ -7,6 +7,7 @@ import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.data.models.User
+import org.springframework.data.domain.Page
 import java.time.LocalDate
 import java.util.UUID
 
@@ -23,7 +24,7 @@ interface IUserService {
         fieldId: UUID?,
         seasonId: UUID?
     ): List<GameResponse>
-    fun getUserFields(userId: UUID): List<FieldResponse>
+    fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse>
     fun getUserSeasons(userId: UUID): List<SeasonResponse>
     fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse
     fun deleteUser(userId: UUID)

@@ -8,6 +8,7 @@ import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.services.interfaces.IUserService
+import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -28,8 +29,8 @@ class UserController(private val userService: IUserService) : IUserController {
     ): List<GameResponse> =
         userService.getUserGames(userId, dateFrom, dateTo, fieldId, seasonId)
 
-    override fun getUserFields(userId: UUID): List<FieldResponse> =
-        userService.getUserFields(userId)
+    override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
+        userService.getUserFields(userId, pageNumber, pageSize)
 
     override fun getUserSeasons(userId: UUID): List<SeasonResponse> =
         userService.getUserSeasons(userId)

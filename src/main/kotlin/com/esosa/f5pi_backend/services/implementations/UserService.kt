@@ -6,7 +6,6 @@ import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
-import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
@@ -16,6 +15,7 @@ import com.esosa.f5pi_backend.services.interfaces.IGameService
 import com.esosa.f5pi_backend.services.interfaces.ISeasonService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
 import org.springframework.context.annotation.Lazy
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -64,10 +64,12 @@ class UserService(
             gameService.getGamesByUser(user, dateFrom, dateTo, field, season)
         }
 
-    override fun getUserFields(userId: UUID): List<FieldResponse> =
-        findUserByIdOrThrowException(userId)
-            .fields
-            .map(Field::buildFieldResponse)
+    override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
+        fieldService.getUserFields(
+            findUserByIdOrThrowException(userId),
+            pageNumber,
+            pageSize
+        )
 
     override fun getUserSeasons(userId: UUID): List<SeasonResponse> =
         findUserByIdOrThrowException(userId)
