@@ -6,6 +6,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
@@ -16,6 +17,8 @@ data class Season(
 
     @ManyToOne
     val user: User,
+
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @OneToMany(mappedBy = "season")
     val games: List<Game> = emptyList(),
