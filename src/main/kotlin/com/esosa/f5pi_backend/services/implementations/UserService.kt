@@ -54,12 +54,14 @@ class UserService(
         dateFrom: LocalDate?,
         dateTo: LocalDate?,
         fieldId: UUID?,
-        seasonId: UUID?
-    ): List<GameResponse> =
+        seasonId: UUID?,
+        pageNumber: Int,
+        pageSize: Int
+    ): Page<GameResponse> =
         findUserByIdOrThrowException(userId).let { user ->
             val field = fieldId?.let { fieldService.findFieldByIdOrThrowException(it) }
             val season = seasonId?.let { seasonService.findSeasonByIdOrThrowException(it) }
-            gameService.getGamesByUser(user, dateFrom, dateTo, field, season)
+            gameService.getGamesByUser(user, dateFrom, dateTo, field, season, pageNumber, pageSize)
         }
 
     override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse> =

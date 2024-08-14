@@ -44,8 +44,10 @@ interface IUserController {
         @RequestParam dateFrom: LocalDate?,
         @RequestParam dateTo: LocalDate?,
         @RequestParam fieldId: UUID?,
-        @RequestParam seasonId: UUID?
-    ): List<GameResponse>
+        @RequestParam seasonId: UUID?,
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int
+    ): Page<GameResponse>
 
     @GetMapping("/{userId}/fields")
     @ResponseStatus(HttpStatus.OK)

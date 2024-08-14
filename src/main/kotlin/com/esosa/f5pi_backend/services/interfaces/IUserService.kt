@@ -22,8 +22,10 @@ interface IUserService {
         dateFrom: LocalDate?,
         dateTo: LocalDate?,
         fieldId: UUID?,
-        seasonId: UUID?
-    ): List<GameResponse>
+        seasonId: UUID?,
+        pageNumber: Int,
+        pageSize: Int
+    ): Page<GameResponse>
     fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse>
     fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse>
     fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse

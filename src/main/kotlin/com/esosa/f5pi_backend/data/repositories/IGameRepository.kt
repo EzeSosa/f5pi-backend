@@ -4,6 +4,8 @@ import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
@@ -18,10 +20,11 @@ interface IGameRepository: JpaRepository<Game, UUID> {
             "AND (?5 is null or g.season = ?5)"
     )
     fun findByUser(
+        pageRequest: PageRequest,
         user: User,
         dateFrom: LocalDate?,
         dateTo: LocalDate?,
         field: Field?,
         season: Season?
-    ): List<Game>
+    ): Page<Game>
 }
