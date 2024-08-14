@@ -6,7 +6,6 @@ import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
-import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IUserRepository
 import com.esosa.f5pi_backend.services.interfaces.*
@@ -70,10 +69,12 @@ class UserService(
             pageSize
         )
 
-    override fun getUserSeasons(userId: UUID): List<SeasonResponse> =
-        findUserByIdOrThrowException(userId)
-            .seasons
-            .map(Season::buildSeasonResponse)
+    override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse> =
+        seasonService.getUserSeasons(
+            findUserByIdOrThrowException(userId),
+            pageNumber,
+            pageSize
+        )
 
     override fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse =
         findUserByIdOrThrowException(userId).let { user ->

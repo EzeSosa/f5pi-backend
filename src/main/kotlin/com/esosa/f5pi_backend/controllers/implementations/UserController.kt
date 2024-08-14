@@ -32,8 +32,8 @@ class UserController(private val userService: IUserService) : IUserController {
     override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
         userService.getUserFields(userId, pageNumber, pageSize)
 
-    override fun getUserSeasons(userId: UUID): List<SeasonResponse> =
-        userService.getUserSeasons(userId)
+    override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse> =
+        userService.getUserSeasons(userId, pageNumber, pageSize)
 
     override fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse =
         userService.updateUser(userId, updateUserRequest)

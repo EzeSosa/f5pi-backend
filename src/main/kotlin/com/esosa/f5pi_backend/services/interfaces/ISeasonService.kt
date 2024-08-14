@@ -4,6 +4,8 @@ import com.esosa.f5pi_backend.controllers.requests.CreateSeasonRequest
 import com.esosa.f5pi_backend.controllers.requests.UpdateSeasonRequest
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.data.models.Season
+import com.esosa.f5pi_backend.data.models.User
+import org.springframework.data.domain.Page
 import java.util.UUID
 
 interface ISeasonService {
@@ -11,4 +13,5 @@ interface ISeasonService {
     fun updateSeason(seasonId: UUID, updateSeasonRequest: UpdateSeasonRequest): SeasonResponse
     fun deleteSeason(seasonId: UUID)
     fun findSeasonByIdOrThrowException(seasonId: UUID): Season
+    fun getUserSeasons(user: User, pageNumber: Int, pageSize: Int): Page<SeasonResponse>
 }
