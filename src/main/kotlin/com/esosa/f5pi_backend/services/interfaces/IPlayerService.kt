@@ -6,6 +6,8 @@ import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.controllers.responses.SavePlayerImageResponse
 import com.esosa.f5pi_backend.data.models.Player
+import com.esosa.f5pi_backend.data.models.User
+import org.springframework.data.domain.Page
 import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
@@ -20,4 +22,5 @@ interface IPlayerService {
     fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse
     fun deletePlayer(playerId: UUID)
     fun findPlayerByIdOrThrowException(playerId: UUID): Player
+    fun getUserPlayers(user: User, pageNumber: Int, pageSize: Int): Page<PlayerResponse>
 }

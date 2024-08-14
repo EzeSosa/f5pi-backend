@@ -6,14 +6,10 @@ import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
-import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IUserRepository
-import com.esosa.f5pi_backend.services.interfaces.IFieldService
-import com.esosa.f5pi_backend.services.interfaces.IGameService
-import com.esosa.f5pi_backend.services.interfaces.ISeasonService
-import com.esosa.f5pi_backend.services.interfaces.IUserService
+import com.esosa.f5pi_backend.services.interfaces.*
 import org.springframework.context.annotation.Lazy
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
@@ -27,7 +23,8 @@ class UserService(
     private val userRepository: IUserRepository,
     @Lazy private val gameService: IGameService,
     @Lazy private val fieldService: IFieldService,
-    @Lazy private val seasonService: ISeasonService
+    @Lazy private val seasonService: ISeasonService,
+    @Lazy private val playerService: IPlayerService
 ) : IUserService {
 
     override fun saveUser(user: User): User =
@@ -46,10 +43,12 @@ class UserService(
         userRepository.findById(userId)
             .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST, "Username with id $userId does not exist") }
 
-    override fun getUserPlayers(userId: UUID): List<PlayerResponse> =
-        findUserByIdOrThrowException(userId)
-            .players
-            .map(Player::buildPlayerResponse)
+    override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int): Page<PlayerResponse> =
+        playerService.getUserPlayers(
+            findUserByIdOrThrowException(userId),
+            pageNumber,
+            pageSize
+        )
 
     override fun getUserGames(
         userId: UUID,

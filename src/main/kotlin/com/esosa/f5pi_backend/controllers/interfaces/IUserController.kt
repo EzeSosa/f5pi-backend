@@ -30,7 +30,11 @@ interface IUserController {
     @GetMapping("/{userId}/players")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Fetches a registered user players")
-    fun getUserPlayers(@PathVariable userId: UUID): List<PlayerResponse>
+    fun getUserPlayers(
+        @PathVariable userId: UUID,
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int
+    ): Page<PlayerResponse>
 
     @GetMapping("/{userId}/games")
     @ResponseStatus(HttpStatus.OK)
