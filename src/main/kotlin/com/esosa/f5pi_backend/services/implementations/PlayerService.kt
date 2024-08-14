@@ -9,7 +9,9 @@ import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.repositories.IPlayerRepository
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.services.interfaces.*
+import com.esosa.f5pi_backend.utils.PageMapper
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -67,6 +69,10 @@ class PlayerService(
     override fun findPlayerByIdOrThrowException(playerId: UUID): Player =
         playerRepository.findById(playerId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist") }
+
+    override fun getUserPlayers(user: User, pageNumber: Int, pageSize: Int): Page<PlayerResponse> =
+        playerRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize), user )
+            .map(Player::buildPlayerResponse)
 
     private fun uploadPlayerImage(multiPartFile: MultipartFile): String =
         fileUploadService.uploadFile(multiPartFile)

@@ -16,7 +16,7 @@ interface IUserService {
     fun ifExistsUsernameThrowException(username: String)
     fun findUserByUsernameOrThrowException(username: String): User
     fun findUserByIdOrThrowException(userId: UUID): User
-    fun getUserPlayers(userId: UUID): List<PlayerResponse>
+    fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int): Page<PlayerResponse>
     fun getUserGames(
         userId: UUID,
         dateFrom: LocalDate?,

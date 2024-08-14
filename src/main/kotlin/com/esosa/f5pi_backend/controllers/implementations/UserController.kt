@@ -17,8 +17,8 @@ import java.util.UUID
 
 @RestController
 class UserController(private val userService: IUserService) : IUserController {
-    override fun getUserPlayers(userId: UUID): List<PlayerResponse> =
-        userService.getUserPlayers(userId)
+    override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int): Page<PlayerResponse> =
+        userService.getUserPlayers(userId, pageNumber, pageSize)
 
     override fun getUserGames(
         @PathVariable userId: UUID,

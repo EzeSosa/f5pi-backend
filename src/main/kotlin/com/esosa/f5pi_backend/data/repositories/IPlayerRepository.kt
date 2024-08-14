@@ -4,6 +4,9 @@ import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.Season
+import com.esosa.f5pi_backend.data.models.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.util.UUID
@@ -27,4 +30,5 @@ interface IPlayerRepository: JpaRepository<Player, UUID> {
             + "AND (?2 is null OR g.field = ?2) "
             + "AND (?3 is null OR g.season = ?3)")
     fun getPlayerStatistics(player: Player, field: Field?, season: Season?): PlayerStatisticsResponse
+    fun findByUser(pageRequest: PageRequest, user: User): Page<Player>
 }
