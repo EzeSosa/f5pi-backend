@@ -5,7 +5,7 @@ import org.springframework.data.domain.Sort
 
 class PageMapper {
     companion object {
-        fun buildPageRequest(pageNumber: Int, pageSize: Int) =
-            PageRequest.of(pageNumber, pageSize, Sort.by("createdAt"))
+        fun buildPageRequest(pageNumber: Int, pageSize: Int, sortingAttribute: String) =
+            PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, sortingAttribute))
     }
 }

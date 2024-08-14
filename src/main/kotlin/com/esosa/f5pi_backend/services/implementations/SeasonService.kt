@@ -47,7 +47,7 @@ class SeasonService(
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Season with id $seasonId does not exist") }
 
     override fun getUserSeasons(user: User, pageNumber: Int, pageSize: Int): Page<SeasonResponse> =
-        seasonRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize), user )
+        seasonRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, "createdAt"), user )
             .map(Season::buildSeasonResponse)
 
     private fun ifSeasonDoesNotExistThrowException(seasonId: UUID) {
