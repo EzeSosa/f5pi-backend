@@ -17,6 +17,8 @@ import com.esosa.f5pi_backend.services.interfaces.IGameService
 import com.esosa.f5pi_backend.services.interfaces.ISeasonService
 import com.esosa.f5pi_backend.services.interfaces.ITeamService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
+import com.esosa.f5pi_backend.utils.PageMapper
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -85,10 +87,18 @@ class GameService(
         dateFrom: LocalDate?,
         dateTo: LocalDate?,
         field: Field?,
-        season: Season?
-    ): List<GameResponse> =
-        gameRepository.findByUser(user, dateFrom, dateTo, field, season)
-            .map(Game::buildGameResponse)
+        season: Season?,
+        pageNumber: Int,
+        pageSize: Int
+    ): Page<GameResponse> =
+        gameRepository.findByUser(
+            PageMapper.buildPageRequest(pageNumber, pageSize, "date"),
+            user,
+            dateFrom,
+            dateTo,
+            field,
+            season
+        ).map(Game::buildGameResponse)
 
     private fun calculateTeamGoals(teams: List<TeamRequest>): Pair<Int, Int> {
         val team1Goals = teams[0].members.sumOf { it.goalsScored } + teams[1].members.sumOf { it.ownGoals }

@@ -9,6 +9,7 @@ import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
+import org.springframework.data.domain.Page
 import java.time.LocalDate
 import java.util.UUID
 
@@ -24,6 +25,8 @@ interface IGameService {
         dateFrom: LocalDate? = null,
         dateTo: LocalDate? = null,
         field: Field? = null,
-        season: Season? = null
-    ): List<GameResponse>
+        season: Season? = null,
+        pageNumber: Int,
+        pageSize: Int
+    ): Page<GameResponse>
 }
