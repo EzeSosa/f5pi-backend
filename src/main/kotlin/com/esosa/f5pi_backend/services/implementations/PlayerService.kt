@@ -71,7 +71,7 @@ class PlayerService(
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist") }
 
     override fun getUserPlayers(user: User, pageNumber: Int, pageSize: Int): Page<PlayerResponse> =
-        playerRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize), user )
+        playerRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, "createdAt"), user )
             .map(Player::buildPlayerResponse)
 
     private fun uploadPlayerImage(multiPartFile: MultipartFile): String =
