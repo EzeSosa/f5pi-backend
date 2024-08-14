@@ -59,7 +59,11 @@ interface IUserController {
     @GetMapping("/{userId}/seasons")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Fetches a registered user seasons")
-    fun getUserSeasons(@PathVariable userId: UUID): List<SeasonResponse>
+    fun getUserSeasons(
+        @PathVariable userId: UUID,
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int
+    ): Page<SeasonResponse>
 
     @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
