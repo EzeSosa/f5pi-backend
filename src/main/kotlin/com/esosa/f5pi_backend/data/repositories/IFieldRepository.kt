@@ -9,4 +9,5 @@ import java.util.UUID
 
 interface IFieldRepository : JpaRepository<Field, UUID> {
     fun findByUser(pageRequest: PageRequest, user: User): Page<Field>
+    fun existsByNameAndUser(name: String, user: User): Boolean
 }

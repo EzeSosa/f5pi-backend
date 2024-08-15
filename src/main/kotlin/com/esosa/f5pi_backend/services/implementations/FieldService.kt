@@ -24,15 +24,16 @@ class FieldService(
     override fun saveField(createFieldRequest: CreateFieldRequest): FieldResponse =
         with(createFieldRequest) {
             val user = userService.findUserByIdOrThrowException(userId)
+            ifFieldNameExistsForUserThrowException(name, user)
             fieldRepository.save(buildField(user))
                 .buildFieldResponse()
         }
 
     override fun updateField(fieldId: UUID, updateFieldRequest: UpdateFieldRequest): FieldResponse =
-        findFieldByIdOrThrowException(fieldId).let {field ->
-            fieldRepository.save(field.apply {
-                name = updateFieldRequest.name
-            }).buildFieldResponse()
+        findFieldByIdOrThrowException(fieldId).let { field ->
+            ifFieldNameExistsForUserThrowException(updateFieldRequest.name, field.user)
+            fieldRepository.save( field.apply { name = updateFieldRequest.name } )
+                .buildFieldResponse()
         }
 
     override fun deleteField(fieldId: UUID) {
@@ -47,6 +48,11 @@ class FieldService(
     override fun getUserFields(user: User, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
         fieldRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, "createdAt"), user )
             .map(Field::buildFieldResponse)
+
+    private fun ifFieldNameExistsForUserThrowException(fieldName: String, user: User) {
+        if (fieldRepository.existsByNameAndUser(fieldName, user))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Field name $fieldName already exists for the user")
+    }
 
     private fun ifFieldDoesNotExistThrowException(fieldId: UUID) {
         if (!fieldRepository.existsById(fieldId))
