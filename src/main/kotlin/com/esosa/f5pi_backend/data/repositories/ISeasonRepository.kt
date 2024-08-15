@@ -9,4 +9,5 @@ import java.util.UUID
 
 interface ISeasonRepository : JpaRepository<Season, UUID> {
     fun findByUser(pageRequest: PageRequest, user: User): Page<Season>
+    fun existsByNameAndUser(name: String, user: User): Boolean
 }

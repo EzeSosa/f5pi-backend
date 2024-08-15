@@ -24,12 +24,14 @@ class SeasonService(
     override fun saveSeason(createSeasonRequest: CreateSeasonRequest): SeasonResponse =
         with(createSeasonRequest) {
             val user = userService.findUserByIdOrThrowException(userId)
+            ifSeasonNameExistsForUserThrowException(name, user)
             seasonRepository.save(buildSeason(user))
                 .buildSeasonResponse()
         }
 
     override fun updateSeason(seasonId: UUID, updateSeasonRequest: UpdateSeasonRequest): SeasonResponse =
         findSeasonByIdOrThrowException(seasonId).let { season ->
+            ifSeasonNameExistsForUserThrowException(updateSeasonRequest.name, season.user)
             seasonRepository.save(season.apply {
                 name = updateSeasonRequest.name
                 initialDate = updateSeasonRequest.initialDate
@@ -49,6 +51,11 @@ class SeasonService(
     override fun getUserSeasons(user: User, pageNumber: Int, pageSize: Int): Page<SeasonResponse> =
         seasonRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, "createdAt"), user )
             .map(Season::buildSeasonResponse)
+
+    private fun ifSeasonNameExistsForUserThrowException(seasonName: String, user: User) {
+        if (seasonRepository.existsByNameAndUser(seasonName, user))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Season with name $seasonName already exists for that user")
+    }
 
     private fun ifSeasonDoesNotExistThrowException(seasonId: UUID) {
         if (!seasonRepository.existsById(seasonId))
