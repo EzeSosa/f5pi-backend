@@ -40,6 +40,7 @@ class PlayerService(
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
         with(createPlayerRequest) {
             val user = userService.findUserByIdOrThrowException(userId)
+            ifPlayerNameExistsForUserThrowException(name, user)
             playerRepository.save(buildPlayer(user, DEFAULT_IMAGE_URL))
                 .buildPlayerResponse()
         }
@@ -51,14 +52,11 @@ class PlayerService(
             return@let SavePlayerImageResponse(imageURL)
         }
 
-    override fun updatePlayer(
-        playerId: UUID,
-        updatePlayerRequest: UpdatePlayerRequest
-    ): PlayerResponse =
+    override fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse =
         findPlayerByIdOrThrowException(playerId).let { player ->
-            playerRepository.save(player.apply {
-                name = updatePlayerRequest.name
-            }).buildPlayerResponse()
+            ifPlayerNameExistsForUserThrowException(updatePlayerRequest.name, player.user)
+            playerRepository.save( player.apply { name = updatePlayerRequest.name } )
+                .buildPlayerResponse()
         }
 
     override fun deletePlayer(playerId: UUID) {
@@ -76,6 +74,11 @@ class PlayerService(
 
     private fun uploadPlayerImage(multiPartFile: MultipartFile): String =
         fileUploadService.uploadFile(multiPartFile)
+
+    private fun ifPlayerNameExistsForUserThrowException(playerName: String, user: User) {
+        if (playerRepository.existsByNameAndUser(playerName, user))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Season with name $playerName already exists for that user")
+    }
 
     private fun ifPlayerDoesNotExistThrowException(playerId: UUID) {
         if (!playerRepository.existsById(playerId))

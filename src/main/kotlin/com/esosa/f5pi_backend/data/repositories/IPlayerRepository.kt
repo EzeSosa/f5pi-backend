@@ -31,4 +31,5 @@ interface IPlayerRepository: JpaRepository<Player, UUID> {
             + "AND (?3 is null OR g.season = ?3)")
     fun getPlayerStatistics(player: Player, field: Field?, season: Season?): PlayerStatisticsResponse
     fun findByUser(pageRequest: PageRequest, user: User): Page<Player>
+    fun existsByNameAndUser(name: String, user: User): Boolean
 }
