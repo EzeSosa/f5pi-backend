@@ -31,6 +31,8 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 	implementation("com.cloudinary:cloudinary-http44:1.39.0")
+	implementation("org.springframework:spring-webflux")
+
 
 	runtimeOnly("com.mysql:mysql-connector-j")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
