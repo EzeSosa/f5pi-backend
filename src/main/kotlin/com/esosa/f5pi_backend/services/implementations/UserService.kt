@@ -42,7 +42,13 @@ class UserService(
         userRepository.findById(userId)
             .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST, "Username with id $userId does not exist") }
 
-    override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<PlayerResponse> =
+    override fun getUserPlayers(
+        userId: UUID,
+        pageNumber: Int,
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
+    ): Page<PlayerResponse> =
         playerService.getUserPlayers(
             findUserByIdOrThrowException(userId),
             pageNumber,
@@ -68,7 +74,13 @@ class UserService(
             gameService.getGamesByUser(user, dateFrom, dateTo, field, season, pageNumber, pageSize, sortAttribute, sortOrder)
         }
 
-    override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<FieldResponse> =
+    override fun getUserFields(
+        userId: UUID,
+        pageNumber: Int,
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
+    ): Page<FieldResponse> =
         fieldService.getUserFields(
             findUserByIdOrThrowException(userId),
             pageNumber,
@@ -77,7 +89,13 @@ class UserService(
             sortOrder
         )
 
-    override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<SeasonResponse> =
+    override fun getUserSeasons(
+        userId: UUID,
+        pageNumber: Int,
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
+    ): Page<SeasonResponse> =
         seasonService.getUserSeasons(
             findUserByIdOrThrowException(userId),
             pageNumber,
