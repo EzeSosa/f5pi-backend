@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException
 
 class PageMapper {
     companion object {
-        fun buildPageRequest(pageNumber: Int, pageSize: Int, sortingAttribute: String, sortOrder: String = "desc") =
+        fun buildPageRequest(pageNumber: Int, pageSize: Int, sortingAttribute: String, sortOrder: String) =
             PageRequest.of( pageNumber, pageSize, Sort.by( buildSortOrder(sortOrder), sortingAttribute ) )
 
         private fun buildSortOrder(sortOrder: String): Direction =

@@ -77,11 +77,13 @@ class UserService(
             sortOrder
         )
 
-    override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse> =
+    override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<SeasonResponse> =
         seasonService.getUserSeasons(
             findUserByIdOrThrowException(userId),
             pageNumber,
-            pageSize
+            pageSize,
+            sortAttribute,
+            sortOrder
         )
 
     override fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse =

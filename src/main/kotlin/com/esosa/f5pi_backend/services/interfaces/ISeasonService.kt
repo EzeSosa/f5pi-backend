@@ -13,5 +13,5 @@ interface ISeasonService {
     fun updateSeason(seasonId: UUID, updateSeasonRequest: UpdateSeasonRequest): SeasonResponse
     fun deleteSeason(seasonId: UUID)
     fun findSeasonByIdOrThrowException(seasonId: UUID): Season
-    fun getUserSeasons(user: User, pageNumber: Int, pageSize: Int): Page<SeasonResponse>
+    fun getUserSeasons(user: User, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<SeasonResponse>
 }
