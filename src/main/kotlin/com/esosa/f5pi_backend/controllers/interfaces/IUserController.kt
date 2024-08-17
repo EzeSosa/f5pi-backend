@@ -59,7 +59,9 @@ interface IUserController {
     fun getUserFields(
         @PathVariable userId: UUID,
         @RequestParam(defaultValue = "0") pageNumber: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "createdAt") sortAttribute: String,
+        @RequestParam(defaultValue = "desc") sortOrder: String
     ): Page<FieldResponse>
 
     @GetMapping("/{userId}/seasons")

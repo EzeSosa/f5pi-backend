@@ -28,7 +28,7 @@ interface IUserService {
         sortAttribute: String,
         sortOrder: String
     ): Page<GameResponse>
-    fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse>
+    fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<FieldResponse>
     fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse>
     fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse
     fun deleteUser(userId: UUID)

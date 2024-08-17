@@ -68,11 +68,13 @@ class UserService(
             gameService.getGamesByUser(user, dateFrom, dateTo, field, season, pageNumber, pageSize, sortAttribute, sortOrder)
         }
 
-    override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
+    override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<FieldResponse> =
         fieldService.getUserFields(
             findUserByIdOrThrowException(userId),
             pageNumber,
-            pageSize
+            pageSize,
+            sortAttribute,
+            sortOrder
         )
 
     override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse> =
