@@ -24,7 +24,9 @@ interface IUserService {
         fieldId: UUID?,
         seasonId: UUID?,
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
     ): Page<GameResponse>
     fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse>
     fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse>

@@ -48,7 +48,9 @@ interface IUserController {
         @RequestParam fieldId: UUID?,
         @RequestParam seasonId: UUID?,
         @RequestParam(defaultValue = "0") pageNumber: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "date") sortAttribute: String,
+        @RequestParam(defaultValue = "desc") sortOrder: String
     ): Page<GameResponse>
 
     @GetMapping("/{userId}/fields")

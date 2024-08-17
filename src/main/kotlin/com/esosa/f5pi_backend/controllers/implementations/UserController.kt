@@ -25,9 +25,11 @@ class UserController(private val userService: IUserService) : IUserController {
         fieldId: UUID?,
         seasonId: UUID?,
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
     ): Page<GameResponse> =
-        userService.getUserGames(userId, dateFrom, dateTo, fieldId, seasonId, pageNumber, pageSize)
+        userService.getUserGames(userId, dateFrom, dateTo, fieldId, seasonId, pageNumber, pageSize, sortAttribute, sortOrder)
 
     override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
         userService.getUserFields(userId, pageNumber, pageSize)

@@ -89,10 +89,12 @@ class GameService(
         field: Field?,
         season: Season?,
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
     ): Page<GameResponse> =
         gameRepository.findByUser(
-            PageMapper.buildPageRequest(pageNumber, pageSize, "date"),
+            PageMapper.buildPageRequest(pageNumber, pageSize, sortAttribute, sortOrder),
             user,
             dateFrom,
             dateTo,
