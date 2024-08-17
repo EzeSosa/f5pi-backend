@@ -3,6 +3,8 @@ package com.esosa.f5pi_backend.exceptions
 import io.jsonwebtoken.JwtException
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException
 import org.apache.tomcat.util.http.fileupload.impl.FileUploadIOException
+import org.hibernate.query.sqm.PathElementException
+import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.BadCredentialsException
@@ -85,6 +87,24 @@ class ExceptionControllerAdvice {
         ExceptionPayload(
             message = "There was a problem uploading the image. Contact an administrator.",
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            trace = ex.stackTrace
+        )
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PropertyReferenceException::class)
+    fun handlePropertyReferenceException(ex: PropertyReferenceException): ExceptionPayload =
+        ExceptionPayload(
+            message = ex.message,
+            status = HttpStatus.BAD_REQUEST.value(),
+            trace = ex.stackTrace
+        )
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PathElementException::class)
+    fun handlePathElementException(ex: PathElementException): ExceptionPayload =
+        ExceptionPayload(
+            message = ex.message,
+            status = HttpStatus.BAD_REQUEST.value(),
             trace = ex.stackTrace
         )
 }
