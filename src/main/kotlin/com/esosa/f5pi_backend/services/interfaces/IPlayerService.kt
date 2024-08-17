@@ -22,5 +22,5 @@ interface IPlayerService {
     fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse
     fun deletePlayer(playerId: UUID)
     fun findPlayerByIdOrThrowException(playerId: UUID): Player
-    fun getUserPlayers(user: User, pageNumber: Int, pageSize: Int): Page<PlayerResponse>
+    fun getUserPlayers(user: User, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<PlayerResponse>
 }

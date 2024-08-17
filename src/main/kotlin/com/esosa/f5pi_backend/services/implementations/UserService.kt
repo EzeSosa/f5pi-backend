@@ -42,11 +42,13 @@ class UserService(
         userRepository.findById(userId)
             .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST, "Username with id $userId does not exist") }
 
-    override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int): Page<PlayerResponse> =
+    override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<PlayerResponse> =
         playerService.getUserPlayers(
             findUserByIdOrThrowException(userId),
             pageNumber,
-            pageSize
+            pageSize,
+            sortAttribute,
+            sortOrder
         )
 
     override fun getUserGames(
