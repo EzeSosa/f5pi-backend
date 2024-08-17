@@ -33,7 +33,9 @@ interface IUserController {
     fun getUserPlayers(
         @PathVariable userId: UUID,
         @RequestParam(defaultValue = "0") pageNumber: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "createdAt") sortAttribute: String,
+        @RequestParam(defaultValue = "desc") sortOrder: String
     ): Page<PlayerResponse>
 
     @GetMapping("/{userId}/games")
@@ -46,7 +48,9 @@ interface IUserController {
         @RequestParam fieldId: UUID?,
         @RequestParam seasonId: UUID?,
         @RequestParam(defaultValue = "0") pageNumber: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "date") sortAttribute: String,
+        @RequestParam(defaultValue = "desc") sortOrder: String
     ): Page<GameResponse>
 
     @GetMapping("/{userId}/fields")
@@ -55,7 +59,9 @@ interface IUserController {
     fun getUserFields(
         @PathVariable userId: UUID,
         @RequestParam(defaultValue = "0") pageNumber: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "createdAt") sortAttribute: String,
+        @RequestParam(defaultValue = "desc") sortOrder: String
     ): Page<FieldResponse>
 
     @GetMapping("/{userId}/seasons")
@@ -64,7 +70,9 @@ interface IUserController {
     fun getUserSeasons(
         @PathVariable userId: UUID,
         @RequestParam(defaultValue = "0") pageNumber: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(defaultValue = "createdAt") sortAttribute: String,
+        @RequestParam(defaultValue = "desc") sortOrder: String
     ): Page<SeasonResponse>
 
     @PatchMapping("/{userId}")

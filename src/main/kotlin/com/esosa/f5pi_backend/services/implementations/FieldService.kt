@@ -45,8 +45,8 @@ class FieldService(
         fieldRepository.findById(fieldId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Field with id $fieldId does not exist") }
 
-    override fun getUserFields(user: User, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
-        fieldRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, "createdAt"), user )
+    override fun getUserFields(user: User, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<FieldResponse> =
+        fieldRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, sortAttribute, sortOrder), user )
             .map(Field::buildFieldResponse)
 
     private fun ifFieldNameExistsForUserThrowException(fieldName: String, user: User) {

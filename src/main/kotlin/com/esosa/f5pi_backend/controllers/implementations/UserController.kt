@@ -15,8 +15,8 @@ import java.util.UUID
 
 @RestController
 class UserController(private val userService: IUserService) : IUserController {
-    override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int): Page<PlayerResponse> =
-        userService.getUserPlayers(userId, pageNumber, pageSize)
+    override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<PlayerResponse> =
+        userService.getUserPlayers(userId, pageNumber, pageSize, sortAttribute, sortOrder)
 
     override fun getUserGames(
         userId: UUID,
@@ -25,15 +25,17 @@ class UserController(private val userService: IUserService) : IUserController {
         fieldId: UUID?,
         seasonId: UUID?,
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
     ): Page<GameResponse> =
-        userService.getUserGames(userId, dateFrom, dateTo, fieldId, seasonId, pageNumber, pageSize)
+        userService.getUserGames(userId, dateFrom, dateTo, fieldId, seasonId, pageNumber, pageSize, sortAttribute, sortOrder)
 
-    override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse> =
-        userService.getUserFields(userId, pageNumber, pageSize)
+    override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<FieldResponse> =
+        userService.getUserFields(userId, pageNumber, pageSize, sortAttribute, sortOrder)
 
-    override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse> =
-        userService.getUserSeasons(userId, pageNumber, pageSize)
+    override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<SeasonResponse> =
+        userService.getUserSeasons(userId, pageNumber, pageSize, sortAttribute, sortOrder)
 
     override fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse =
         userService.updateUser(userId, updateUserRequest)

@@ -27,6 +27,8 @@ interface IGameService {
         field: Field? = null,
         season: Season? = null,
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
     ): Page<GameResponse>
 }

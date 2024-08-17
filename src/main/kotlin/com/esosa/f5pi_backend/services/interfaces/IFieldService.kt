@@ -13,5 +13,5 @@ interface IFieldService {
     fun updateField(fieldId: UUID, updateFieldRequest: UpdateFieldRequest): FieldResponse
     fun deleteField(fieldId: UUID)
     fun findFieldByIdOrThrowException(fieldId: UUID): Field
-    fun getUserFields(user: User, pageNumber: Int, pageSize: Int): Page<FieldResponse>
+    fun getUserFields(user: User, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<FieldResponse>
 }

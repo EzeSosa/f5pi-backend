@@ -68,8 +68,8 @@ class PlayerService(
         playerRepository.findById(playerId)
             .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist") }
 
-    override fun getUserPlayers(user: User, pageNumber: Int, pageSize: Int): Page<PlayerResponse> =
-        playerRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, "createdAt"), user )
+    override fun getUserPlayers(user: User, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<PlayerResponse> =
+        playerRepository.findByUser( PageMapper.buildPageRequest(pageNumber, pageSize, sortAttribute, sortOrder), user )
             .map(Player::buildPlayerResponse)
 
     private fun uploadPlayerImage(multiPartFile: MultipartFile): String =

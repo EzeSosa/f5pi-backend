@@ -12,11 +12,23 @@ import java.time.LocalDate
 import java.util.UUID
 
 interface IUserService {
+
     fun saveUser(user: User): User
+
     fun ifExistsUsernameThrowException(username: String)
+
     fun findUserByUsernameOrThrowException(username: String): User
+
     fun findUserByIdOrThrowException(userId: UUID): User
-    fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int): Page<PlayerResponse>
+
+    fun getUserPlayers(
+        userId: UUID,
+        pageNumber: Int,
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
+    ): Page<PlayerResponse>
+
     fun getUserGames(
         userId: UUID,
         dateFrom: LocalDate?,
@@ -24,10 +36,29 @@ interface IUserService {
         fieldId: UUID?,
         seasonId: UUID?,
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
     ): Page<GameResponse>
-    fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int): Page<FieldResponse>
-    fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int): Page<SeasonResponse>
+
+    fun getUserFields(
+        userId: UUID,
+        pageNumber: Int,
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
+    ): Page<FieldResponse>
+
+    fun getUserSeasons(
+        userId: UUID,
+        pageNumber: Int,
+        pageSize: Int,
+        sortAttribute: String,
+        sortOrder: String
+    ): Page<SeasonResponse>
+
     fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse
+
     fun deleteUser(userId: UUID)
+
 }
