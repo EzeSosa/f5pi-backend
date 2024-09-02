@@ -77,7 +77,7 @@ class PlayerService(
 
     private fun ifPlayerNameExistsForUserThrowException(playerName: String, user: User) {
         if (playerRepository.existsByNameAndUser(playerName, user))
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Season with name $playerName already exists for that user")
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "PLayer with name $playerName already exists for that user")
     }
 
     private fun ifPlayerDoesNotExistThrowException(playerId: UUID) {

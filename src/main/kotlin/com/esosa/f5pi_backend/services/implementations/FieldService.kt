@@ -56,7 +56,7 @@ class FieldService(
 
     private fun ifFieldDoesNotExistThrowException(fieldId: UUID) {
         if (!fieldRepository.existsById(fieldId))
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $fieldId does not exist")
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Field with id $fieldId does not exist")
     }
 
     private fun CreateFieldRequest.buildField(user: User) = Field(name, user)
