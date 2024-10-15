@@ -18,6 +18,7 @@ import com.esosa.f5pi_backend.services.interfaces.ISeasonService
 import com.esosa.f5pi_backend.services.interfaces.ITeamService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
 import com.esosa.f5pi_backend.utils.PageMapper
+import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -50,6 +51,7 @@ class GameService(
                 .buildGameResponse()
         }
 
+    @Transactional
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest): GameDetailsResponse {
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
 
