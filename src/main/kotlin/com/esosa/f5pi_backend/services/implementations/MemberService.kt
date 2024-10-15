@@ -16,13 +16,13 @@ class MemberService(
     private val playerService: IPlayerService
 ) : IMemberService {
 
+    @Async
     override fun saveMember(team: Team, memberRequest: MemberRequest) {
         val player = playerService.findPlayerByIdOrThrowException(memberRequest.playerId)
         memberRepository.save(memberRequest.buildMember(team, player))
             .also { updateTeam(it, team) }
     }
 
-    @Async
     private fun updateTeam(member: Member, team: Team) {
         team.members.add(member)
     }

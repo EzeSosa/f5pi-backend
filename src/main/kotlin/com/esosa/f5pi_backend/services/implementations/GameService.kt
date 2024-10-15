@@ -21,6 +21,7 @@ import com.esosa.f5pi_backend.utils.PageMapper
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
@@ -52,6 +53,7 @@ class GameService(
         }
 
     @Transactional
+    @Async
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest): GameDetailsResponse {
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
 

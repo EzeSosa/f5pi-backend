@@ -16,6 +16,7 @@ class TeamService(
     private val memberService: IMemberService
 ) : ITeamService {
 
+    @Async
     override fun saveTeam(gameDetails: GameDetails, teamResult: TeamResult, teamGoals: Int, teamRequest: TeamRequest) {
         teamRepository.save(buildTeam(teamResult, teamGoals, gameDetails))
             .also { updateGameDetails(it, gameDetails) }
@@ -27,7 +28,6 @@ class TeamService(
     private fun buildTeam(teamResult: TeamResult, teamGoals: Int, gameDetails: GameDetails): Team =
         Team(teamResult, teamGoals, gameDetails)
 
-    @Async
     private fun updateGameDetails(team: Team, gameDetails: GameDetails) {
         gameDetails.teams.add(team)
     }
