@@ -23,12 +23,11 @@ class AIService(
     @Value("\${ai.message}")
     lateinit var BASE_MESSAGE: String
 
-    override fun generateTeams(generateTeamsRequest: GenerateTeamsRequest): GenerateTeamsResponse {
-        val playerByName = mutableMapOf<String, Player>()
-        val requestMessage = buildRequestMessage(generateTeamsRequest, playerByName)
-        val response = aiClient.generateTeams(requestMessage)
-        return response.buildGenerateTeamsResponse(playerByName)
-    }
+    override fun generateTeams(generateTeamsRequest: GenerateTeamsRequest): GenerateTeamsResponse =
+        mutableMapOf<String, Player>().let { playerByName ->
+            aiClient.generateTeams(buildRequestMessage(generateTeamsRequest, playerByName))
+                .buildGenerateTeamsResponse(playerByName)
+        }
 
     private fun buildRequestMessage(generateTeamsRequest: GenerateTeamsRequest, playerByName: MutableMap<String, Player>): QueryRequest =
         QueryRequest(

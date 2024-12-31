@@ -18,8 +18,11 @@ import com.esosa.f5pi_backend.utils.WHITE_LIST_URL
 @Component
 class JWTAuthenticationFilter(
     private val userDetailsService: CustomUserDetailsService,
-    private val jwtService: JWTService
+    private val jwtService: JWTService,
+    private val pathMatcher: AntPathMatcher
 ) : OncePerRequestFilter() {
+
+    private val ACCESS: String = "ACCESS"
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -28,26 +31,26 @@ class JWTAuthenticationFilter(
     ) {
         val authHeader: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
 
-        if (!authHeader.containsBearerToken()) {
+        if (authHeader.isNullOrEmpty() || !authHeader.containsBearerToken()) {
             filterChain.doFilter(request, response)
             return
         }
 
-        val token = authHeader!!.extractToken()
+        val token = authHeader.extractToken()
         val username = jwtService.extractUsernameFromToken(token)
 
         if (SecurityContextHolder.getContext().authentication == null) {
             val user = userDetailsService.loadUserByUsername(username)
 
-            if (jwtService.isTokenValid(token, user) && jwtService.extractTokenTypeFromToken(token)!! == "ACCESS")
+            if (jwtService.isTokenValid(token, user) && jwtService.extractTokenTypeFromToken(token)!! == ACCESS)
                 updateContext(user, request)
-
-            filterChain.doFilter(request, response)
         }
+
+        filterChain.doFilter(request, response)
     }
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean =
-        WHITE_LIST_URL.any { url -> AntPathMatcher().match(url, request.requestURI) }
+        WHITE_LIST_URL.any { url -> pathMatcher.match(url, request.requestURI) }
 
     private fun updateContext(user: UserDetails, request: HttpServletRequest) {
         val authToken = UsernamePasswordAuthenticationToken(user, null, user.authorities)
@@ -55,8 +58,7 @@ class JWTAuthenticationFilter(
         SecurityContextHolder.getContext().authentication = authToken
     }
 
-    private fun String?.containsBearerToken(): Boolean =
-        this != null && startsWith("Bearer ")
+    private fun String?.containsBearerToken(): Boolean = this != null && startsWith("Bearer ")
 
     private fun String.extractToken(): String =
         substringAfter("Bearer ").takeIf { token -> token.isNotBlank() }

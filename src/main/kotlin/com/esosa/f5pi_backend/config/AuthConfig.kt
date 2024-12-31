@@ -12,6 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.util.AntPathMatcher
 
 @Configuration
 @EnableConfigurationProperties(JWTProperties::class)
@@ -25,14 +26,14 @@ class AuthConfig {
         }
 
     @Bean
-    fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager =
-        authConfig.authenticationManager
+    fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager = authConfig.authenticationManager
 
     @Bean
-    fun userDetailsService(userRepository: IUserRepository): CustomUserDetailsService =
-        CustomUserDetailsService(userRepository)
+    fun userDetailsService(userRepository: IUserRepository): CustomUserDetailsService = CustomUserDetailsService(userRepository)
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder =
-        BCryptPasswordEncoder()
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+    @Bean
+    fun pathMatcher(): AntPathMatcher = AntPathMatcher()
 }

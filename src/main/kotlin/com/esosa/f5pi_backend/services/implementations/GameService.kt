@@ -52,8 +52,7 @@ class GameService(
                 .buildGameResponse()
         }
 
-    @Transactional
-    @Async
+    @Transactional @Async
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest): GameDetailsResponse {
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
 
@@ -124,12 +123,11 @@ class GameService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Game with id $gameId does not exist")
     }
 
-    private fun ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest: GameDetailsRequest) {
-        with(gameDetailsRequest){
+    private fun ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest: GameDetailsRequest) =
+        with(gameDetailsRequest) {
             if (teams[0].members.size != teams[1].members.size)
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Both teams must have the same member size")
         }
-    }
 
     private fun ifGameDateIsOutOfSeasonThrowException(createGameRequest: CreateGameRequest, season: Season) {
         if (createGameRequest.date.isAfter(season.finalDate))
