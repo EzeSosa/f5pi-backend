@@ -52,7 +52,7 @@ class GameService(
                 .buildGameResponse()
         }
 
-    @Transactional @Async
+    @Transactional
     override fun saveGameDetails(gameId: UUID, gameDetailsRequest: GameDetailsRequest): GameDetailsResponse {
         ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest)
 
@@ -64,8 +64,7 @@ class GameService(
             teamService.saveTeam(game.details, teamResults.toList()[index], teamGoals.toList()[index], team)
         }
 
-        return game.details
-            .buildGameDetailsResponse()
+        return game.details.buildGameDetailsResponse()
     }
 
     override fun updateGame(gameId: UUID, updateGameRequest: UpdateGameRequest): GameResponse =
@@ -105,13 +104,15 @@ class GameService(
             season
         ).map(Game::buildGameResponse)
 
-    private fun calculateTeamGoals(teams: List<TeamRequest>): Pair<Int, Int> {
+    fun calculateTeamGoals(teams: List<TeamRequest>): Pair<Int, Int> {
         val team1Goals = teams[0].members.sumOf { it.goalsScored } + teams[1].members.sumOf { it.ownGoals }
         val team2Goals = teams[1].members.sumOf { it.goalsScored } + teams[0].members.sumOf { it.ownGoals }
         return team1Goals to team2Goals
     }
 
-    private fun determineTeamResults(teamGoals: Pair<Int, Int>): Pair<TeamResult, TeamResult> =
+    fun ping() = "pong"
+
+    fun determineTeamResults(teamGoals: Pair<Int, Int>): Pair<TeamResult, TeamResult> =
         when {
             teamGoals.first > teamGoals.second -> TeamResult.WIN to TeamResult.LOSS
             teamGoals.second > teamGoals.first -> TeamResult.LOSS to TeamResult.WIN
@@ -123,7 +124,7 @@ class GameService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Game with id $gameId does not exist")
     }
 
-    private fun ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest: GameDetailsRequest) =
+    fun ifMembersSizeFromTeamDoesNotEqualThrowException(gameDetailsRequest: GameDetailsRequest) =
         with(gameDetailsRequest) {
             if (teams[0].members.size != teams[1].members.size)
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Both teams must have the same member size")

@@ -18,14 +18,13 @@ class MemberService(
 
     @Async
     override fun saveMember(team: Team, memberRequest: MemberRequest) {
-        val player = playerService.findPlayerByIdOrThrowException(memberRequest.playerId)
-        memberRepository.save(memberRequest.buildMember(team, player))
-            .also { updateTeam(it, team) }
+        with (memberRequest) {
+            buildMember(team, playerService.findPlayerByIdOrThrowException(playerId))
+                .also { memberRepository.save(it) }
+                .also { team.members.add(it) }
+        }
     }
 
-    private fun updateTeam(member: Member, team: Team) {
-        team.members.add(member)
-    }
-
-    private fun MemberRequest.buildMember(team: Team, player: Player): Member = Member(goalsScored, ownGoals, team, player)
+    private fun MemberRequest.buildMember(team: Team, player: Player): Member =
+        Member(goalsScored, ownGoals, team, player)
 }

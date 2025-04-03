@@ -17,13 +17,11 @@ class TeamService(
 ) : ITeamService {
 
     @Async
-    override fun saveTeam(gameDetails: GameDetails, teamResult: TeamResult, teamGoals: Int, teamRequest: TeamRequest) {
+    override fun saveTeam(gameDetails: GameDetails, teamResult: TeamResult, teamGoals: Int, teamRequest: TeamRequest) =
         teamRepository.save(buildTeam(teamResult, teamGoals, gameDetails))
             .also { updateGameDetails(it, gameDetails) }
             .let { team -> teamRequest.members
-                    .forEach { memberRequest -> memberService.saveMember(team, memberRequest) }
-        }
-    }
+                    .forEach { memberRequest -> memberService.saveMember(team, memberRequest) } }
 
     private fun buildTeam(teamResult: TeamResult, teamGoals: Int, gameDetails: GameDetails): Team =
         Team(teamResult, teamGoals, gameDetails)
