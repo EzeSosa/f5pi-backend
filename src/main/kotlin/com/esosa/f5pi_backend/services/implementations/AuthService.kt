@@ -104,6 +104,9 @@ class AuthService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not an access token")
     }
 
-    private fun RegisterRequest.buildUser(): User = User(username, passwordEncoder.encode(password), fullName, email)
-    private fun validateExistsUsername(username: String) = userService.ifExistsUsernameThrowException(username)
+    private fun validateExistsUsername(username: String) =
+        userService.ifExistsUsernameThrowException(username)
+
+    private fun RegisterRequest.buildUser(): User =
+        User(username, passwordEncoder.encode(password), fullName, email)
 }

@@ -9,7 +9,7 @@ import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.ISeasonService
 import com.esosa.f5pi_backend.services.interfaces.ITeamService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,7 +17,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.web.server.ResponseStatusException
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 class GameServiceTest {

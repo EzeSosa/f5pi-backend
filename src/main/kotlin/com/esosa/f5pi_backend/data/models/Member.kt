@@ -12,13 +12,15 @@ data class Member(
     val ownGoals: Int,
 
     @ManyToOne
-    val team: Team,
+    val player: Player = Player(),
 
     @ManyToOne
-    val player: Player,
+    val team: Team = Team(),
 
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
+    constructor() : this(0, 0, Player(), Team())
+
     fun buildMemberResponse(): MemberResponse = MemberResponse(player.name, player.imageURL, goalsScored, ownGoals)
 }

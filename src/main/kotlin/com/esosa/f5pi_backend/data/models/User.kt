@@ -32,5 +32,7 @@ data class User(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
+    constructor() : this("", "", "", "", Role.USER, emptyList(), emptyList(), emptyList(), emptyList(), UUID.randomUUID())
+
     fun buildUserResponse(): UserResponse = UserResponse(id, username, fullName, email, role.name)
 }

@@ -18,13 +18,21 @@ data class Team(
     val goals: Int,
 
     @ManyToOne
-    val gameDetails: GameDetails,
+    val gameDetails: GameDetails = GameDetails(),
 
     @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL])
-    val members: MutableList<Member> = mutableListOf(),
+    var members: MutableList<Member> = mutableListOf(),
 
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
+    constructor() : this(
+        result = TeamResult.DRAW,
+        goals = 0,
+        gameDetails = GameDetails(),
+        members = mutableListOf(),
+        id = UUID.randomUUID()
+    )
+
     fun buildTeamResponse(): TeamResponse = TeamResponse(result, goals, members.map(Member::buildMemberResponse))
 }
