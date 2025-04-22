@@ -4,6 +4,10 @@ import com.esosa.f5pi_backend.controllers.requests.GameDetailsRequest
 import com.esosa.f5pi_backend.controllers.requests.MemberRequest
 import com.esosa.f5pi_backend.controllers.requests.TeamRequest
 import com.esosa.f5pi_backend.data.enums.TeamResult
+import com.esosa.f5pi_backend.data.models.Field
+import com.esosa.f5pi_backend.data.models.Game
+import com.esosa.f5pi_backend.data.models.Season
+import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IGameRepository
 import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.ISeasonService
@@ -15,8 +19,13 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.isNull
+import org.springframework.data.domain.PageImpl
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
@@ -83,5 +92,34 @@ class GameServiceTest {
         }
 
         assertEquals("400 BAD_REQUEST \"Both teams must have the same member size\"", exception.message)
+    }
+
+    @Test
+    fun getGamesByUser() {
+        val testGames = listOf(
+            Game(LocalDate.now(), 2000.0, Field("testField", User()),
+                Season("testSeason", LocalDate.now(), LocalDate.now(), User()), User()),
+        )
+        val gamesPage = PageImpl(testGames)
+
+        `when`(gameRepository.findByUser(
+            any(),
+            any(),
+            isNull(),
+            isNull(),
+            isNull(),
+            isNull()
+        )).thenReturn(gamesPage)
+
+        val user = User()
+        val result = gameService.getGamesByUser(
+            user = user,
+            pageNumber = 0,
+            pageSize = 10,
+            sortAttribute = "date",
+            sortOrder = "asc"
+        )
+
+        assertEquals(result.numberOfElements, 1)
     }
 }
