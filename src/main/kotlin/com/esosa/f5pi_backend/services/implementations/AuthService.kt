@@ -31,7 +31,7 @@ class AuthService(
     private val authManager: AuthenticationManager,
     private val jwtService: JWTService,
     private val jwtProperties: JWTProperties
-): IAuthService {
+) : IAuthService {
 
     override fun register(registerRequest: RegisterRequest) {
         with(registerRequest) {
@@ -87,7 +87,7 @@ class AuthService(
         )
 
     private fun generateTokenTypeClaim(tokenType: TokenType): Map<String, Any> =
-        hashMapOf( Pair("tokenType", tokenType) )
+        hashMapOf("tokenType" to tokenType)
 
     private fun ifTokenInvalidThrowException(token: String, userDetails: UserDetails) {
         if (!jwtService.isTokenValid(token, userDetails))
@@ -104,6 +104,9 @@ class AuthService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not an access token")
     }
 
-    private fun RegisterRequest.buildUser(): User = User(username, passwordEncoder.encode(password), fullName, email)
-    private fun validateExistsUsername(username: String) = userService.ifExistsUsernameThrowException(username)
+    private fun validateExistsUsername(username: String) =
+        userService.ifExistsUsernameThrowException(username)
+
+    private fun RegisterRequest.buildUser(): User =
+        User(username, passwordEncoder.encode(password), fullName, email)
 }

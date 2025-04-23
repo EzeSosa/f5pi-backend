@@ -1,8 +1,10 @@
 package com.esosa.f5pi_backend.services.implementations
 
+import com.esosa.f5pi_backend.controllers.requests.MemberRequest
 import com.esosa.f5pi_backend.controllers.requests.TeamRequest
+import com.esosa.f5pi_backend.controllers.responses.MemberResponse
+import com.esosa.f5pi_backend.controllers.responses.TeamResponse
 import com.esosa.f5pi_backend.data.enums.TeamResult
-import com.esosa.f5pi_backend.data.models.GameDetails
 import com.esosa.f5pi_backend.data.models.Team
 import com.esosa.f5pi_backend.data.repositories.ITeamRepository
 import com.esosa.f5pi_backend.services.interfaces.IMemberService
@@ -17,18 +19,18 @@ class TeamService(
 ) : ITeamService {
 
     @Async
-    override fun saveTeam(gameDetails: GameDetails, teamResult: TeamResult, teamGoals: Int, teamRequest: TeamRequest) {
-        teamRepository.save(buildTeam(teamResult, teamGoals, gameDetails))
-            .also { updateGameDetails(it, gameDetails) }
-            .let { team -> teamRequest.members
-                    .forEach { memberRequest -> memberService.saveMember(team, memberRequest) }
-        }
-    }
+    override fun saveTeam(
+        teamResult: TeamResult,
+        teamGoals: Int,
+        teamRequest: TeamRequest
+    ) =
+        buildTeam(teamResult, teamGoals)
+            .also { teamRepository.save(it) }
+            .let { TeamResponse(it.result, it.goals, saveMembers(teamRequest.members)) }
 
-    private fun buildTeam(teamResult: TeamResult, teamGoals: Int, gameDetails: GameDetails): Team =
-        Team(teamResult, teamGoals, gameDetails)
+    private fun buildTeam(teamResult: TeamResult, teamGoals: Int): Team =
+        Team(teamResult, teamGoals)
 
-    private fun updateGameDetails(team: Team, gameDetails: GameDetails) {
-        gameDetails.teams.add(team)
-    }
+    private fun saveMembers(members: List<MemberRequest>): List<MemberResponse> =
+        members.map { memberRequest -> memberService.saveMember(memberRequest) }
 }

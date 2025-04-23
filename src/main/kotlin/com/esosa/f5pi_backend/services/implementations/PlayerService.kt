@@ -33,8 +33,8 @@ class PlayerService(
     override fun getPlayerStatistics(playerId: UUID, fieldId: UUID?, seasonId: UUID?): PlayerStatisticsResponse {
         val field = fieldId?.let { fieldService.findFieldByIdOrThrowException(it) }
         val season = seasonId?.let { seasonService.findSeasonByIdOrThrowException(it) }
-        return try { playerRepository.getPlayerStatistics(findPlayerByIdOrThrowException(playerId), field, season) }
-        catch (e: Exception) { PlayerStatisticsResponse() }
+        val player = playerId.let { findPlayerByIdOrThrowException(it) }
+        return playerRepository.getPlayerStatistics(player, field, season)
     }
 
     override fun savePlayer(createPlayerRequest: CreatePlayerRequest): PlayerResponse =
@@ -85,5 +85,6 @@ class PlayerService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with id $playerId does not exist")
     }
 
-    private fun CreatePlayerRequest.buildPlayer(user: User, imageURL: String): Player = Player(name, user, imageURL)
+    private fun CreatePlayerRequest.buildPlayer(user: User, imageURL: String): Player =
+        Player(name, user, imageURL)
 }

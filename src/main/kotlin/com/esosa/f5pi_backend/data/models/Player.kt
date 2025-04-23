@@ -26,5 +26,7 @@ data class Player(
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
+    constructor() : this("", User(), "", LocalDateTime.now(), emptyList(), UUID.randomUUID())
+
     fun buildPlayerResponse(): PlayerResponse = PlayerResponse(id, name, imageURL)
 }
