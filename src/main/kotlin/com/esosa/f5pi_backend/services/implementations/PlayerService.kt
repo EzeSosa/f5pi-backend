@@ -54,7 +54,8 @@ class PlayerService(
 
     override fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse =
         findPlayerByIdOrThrowException(playerId).let { player ->
-            ifPlayerNameExistsForUserThrowException(updatePlayerRequest.name, player.user)
+            if (player.name != updatePlayerRequest.name)
+                ifPlayerNameExistsForUserThrowException(updatePlayerRequest.name, player.user)
             playerRepository.save( player.apply { name = updatePlayerRequest.name } )
                 .buildPlayerResponse()
         }

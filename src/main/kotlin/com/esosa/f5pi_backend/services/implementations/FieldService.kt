@@ -31,7 +31,8 @@ class FieldService(
 
     override fun updateField(fieldId: UUID, updateFieldRequest: UpdateFieldRequest): FieldResponse =
         findFieldByIdOrThrowException(fieldId).let { field ->
-            ifFieldNameExistsForUserThrowException(updateFieldRequest.name, field.user)
+            if (field.name != updateFieldRequest.name)
+                ifFieldNameExistsForUserThrowException(updateFieldRequest.name, field.user)
             fieldRepository.save( field.apply { name = updateFieldRequest.name } )
                 .buildFieldResponse()
         }

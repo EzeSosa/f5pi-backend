@@ -31,7 +31,8 @@ class SeasonService(
 
     override fun updateSeason(seasonId: UUID, updateSeasonRequest: UpdateSeasonRequest): SeasonResponse =
         findSeasonByIdOrThrowException(seasonId).let { season ->
-            ifSeasonNameExistsForUserThrowException(updateSeasonRequest.name, season.user)
+            if (season.name != updateSeasonRequest.name)
+                ifSeasonNameExistsForUserThrowException(updateSeasonRequest.name, season.user)
             seasonRepository.save(season.apply {
                 name = updateSeasonRequest.name
                 initialDate = updateSeasonRequest.initialDate
