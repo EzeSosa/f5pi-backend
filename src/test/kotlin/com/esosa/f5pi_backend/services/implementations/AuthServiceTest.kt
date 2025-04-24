@@ -55,13 +55,16 @@ class AuthServiceTest {
 
         authService.register(registerRequest)
 
-        val userCaptor = argumentCaptor<User>()
-        verify(userService).saveUser(userCaptor.capture())
-        val savedUser = userCaptor.firstValue
-
-        assertEquals(registerRequest.username, savedUser.username)
-        assertEquals(encodedPassword, savedUser.password)
-        assertEquals(registerRequest.fullName, savedUser.fullName)
-        assertEquals(registerRequest.email, savedUser.email)
+        argumentCaptor<User>().run {
+            verify(userService).saveUser(capture())
+            firstValue
+        }.also { savedUser ->
+            with(registerRequest) {
+                assertEquals(username, savedUser.username)
+                assertEquals(encodedPassword, savedUser.password)
+                assertEquals(fullName, savedUser.fullName)
+                assertEquals(email, savedUser.email)
+            }
+        }
     }
 }
