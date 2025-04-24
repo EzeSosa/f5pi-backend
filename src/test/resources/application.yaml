@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test_db
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+cors:
+  originPatterns: ${CORS_ORIGINS:http://localhost:4200}
+
+jwt:
+  key: ${MOCKED_JWT_KEY:SgHeAYlgQ+JozW6vY7xxsPQXuvvqSDL+6PiBkpr1KvA=}
+  access-token-expiration: 3600000
+  refresh-token-expiration: 432000000
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /
+
+ai:
+  url: http://127.0.0.1:5000
+  message: MOCKED_AI_MESSAGE
+
+cloudinary:
+  cloud-name: MOCKED_CLOUDINARY_NAME
+  api-key: MOCKED_API_KEY
+  api-secret: MOCKED_API_SECRET
+  default-image-url: MOCKED_IMAGE_URL

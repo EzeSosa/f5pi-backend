@@ -36,11 +36,11 @@ class UserService(
 
     override fun findUserByUsernameOrThrowException(username: String): User =
         userRepository.findByUsername(username)
-            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Username does not exist")
+            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User with username $username does not exist")
 
     override fun findUserByIdOrThrowException(userId: UUID): User =
         userRepository.findById(userId)
-            .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST, "Username with id $userId does not exist") }
+            .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id $userId does not exist") }
 
     override fun getUserPlayers(
         userId: UUID,
