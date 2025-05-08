@@ -9,8 +9,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import java.util.UUID
-
+import java.util.*
 
 interface IPlayerRepository: JpaRepository<Player, UUID> {
     @Query("SELECT new com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse("

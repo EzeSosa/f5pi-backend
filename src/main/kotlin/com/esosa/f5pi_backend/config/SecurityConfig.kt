@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.config
 
 import com.esosa.f5pi_backend.security.filter.JWTAuthenticationFilter
+import com.esosa.f5pi_backend.utils.WHITE_LIST_URL
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -10,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import com.esosa.f5pi_backend.utils.WHITE_LIST_URL
 
 @Configuration
 @EnableWebSecurity
@@ -29,7 +29,7 @@ class SecurityConfig(
                 httpRequests
                     .requestMatchers(*WHITE_LIST_URL).permitAll()
                     .requestMatchers(HttpMethod.GET, "api/v1/**").permitAll()
-                    .anyRequest().permitAll()
+                    .anyRequest().authenticated()
             }
             .sessionManagement { management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .httpBasic { httpBasic -> httpBasic.disable() }

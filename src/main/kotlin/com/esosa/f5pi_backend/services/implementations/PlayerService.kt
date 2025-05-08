@@ -6,17 +6,21 @@ import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.controllers.responses.SavePlayerImageResponse
 import com.esosa.f5pi_backend.data.models.Player
-import com.esosa.f5pi_backend.data.repositories.IPlayerRepository
 import com.esosa.f5pi_backend.data.models.User
-import com.esosa.f5pi_backend.services.interfaces.*
+import com.esosa.f5pi_backend.data.repositories.IPlayerRepository
+import com.esosa.f5pi_backend.services.interfaces.IFieldService
+import com.esosa.f5pi_backend.services.interfaces.IFileUploadService
+import com.esosa.f5pi_backend.services.interfaces.IPlayerService
+import com.esosa.f5pi_backend.services.interfaces.ISeasonService
+import com.esosa.f5pi_backend.services.interfaces.IUserService
 import com.esosa.f5pi_backend.utils.PageMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.multipart.MultipartFile
-import java.util.UUID
+import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @Service
 class PlayerService(
@@ -30,10 +34,11 @@ class PlayerService(
     @Value("\${cloudinary.default-image-url}")
     lateinit var DEFAULT_IMAGE_URL: String
 
+
     override fun getPlayerStatistics(playerId: UUID, fieldId: UUID?, seasonId: UUID?): PlayerStatisticsResponse {
         val field = fieldId?.let { fieldService.findFieldByIdOrThrowException(it) }
         val season = seasonId?.let { seasonService.findSeasonByIdOrThrowException(it) }
-        val player = playerId.let { findPlayerByIdOrThrowException(it) }
+        val player = findPlayerByIdOrThrowException(playerId)
         return playerRepository.getPlayerStatistics(player, field, season)
     }
 
@@ -49,7 +54,7 @@ class PlayerService(
         findPlayerByIdOrThrowException(playerId).let { player ->
             val imageURL = uploadPlayerImage(multiPartFile)
             playerRepository.save(player.apply { this.imageURL = imageURL })
-            return@let SavePlayerImageResponse(imageURL)
+            SavePlayerImageResponse(imageURL)
         }
 
     override fun updatePlayer(playerId: UUID, updatePlayerRequest: UpdatePlayerRequest): PlayerResponse =
