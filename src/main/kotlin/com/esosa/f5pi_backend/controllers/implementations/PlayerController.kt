@@ -7,16 +7,16 @@ import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerStatisticsResponse
 import com.esosa.f5pi_backend.controllers.responses.SavePlayerImageResponse
 import com.esosa.f5pi_backend.services.interfaces.IPlayerService
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import java.util.UUID
+import java.util.*
 
 @RestController
 class PlayerController(private val playerService: IPlayerService) : IPlayerController {
     override fun getPlayerStatistics(
-        @PathVariable playerId: UUID,
-        @RequestParam fieldId: UUID?,
-        @RequestParam seasonId: UUID?
+        playerId: UUID,
+        fieldId: UUID?,
+        seasonId: UUID?
     ): PlayerStatisticsResponse =
         playerService.getPlayerStatistics(playerId, fieldId, seasonId)
 
