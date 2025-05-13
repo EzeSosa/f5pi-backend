@@ -1,6 +1,7 @@
 package com.esosa.f5pi_backend.controllers.implementations
 
 import com.esosa.f5pi_backend.controllers.base.BaseIntegrationTest
+import com.esosa.f5pi_backend.controllers.requests.CheckTokenRequest
 import com.esosa.f5pi_backend.controllers.requests.LoginRequest
 import com.esosa.f5pi_backend.controllers.requests.RegisterRequest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -51,5 +52,33 @@ class AuthControllerTest : BaseIntegrationTest() {
         )
 
         assertEquals(userCountBefore?.plus(1), userCountAfter)
+    }
+
+    @Test
+    fun `should check token with SQL injection payload`() {
+        RegisterRequest(
+            "DELETE FROM USER WHERE 1 = 1",
+            "DELETE FROM GAME WHERE 1 = 2",
+            "DELETE FROM FIELD WHERE 1 = 1",
+            "test@gmail.com"
+        ).also {
+            mockMvc.perform(
+                post("/auth/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(toJson(it))
+            ).andExpect(status().isCreated)
+        }.also {
+            mockMvc.perform(
+                post("/auth/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(toJson(LoginRequest(it.username, it.password)))
+            ).andExpect(status().isOk)
+        }.also {
+            mockMvc.perform(
+                post("/auth/check-token")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(toJson(CheckTokenRequest("DELETE FROM USER WHERE 1 = 1")))
+            ).andExpect(status().isUnauthorized)
+        }
     }
 }
