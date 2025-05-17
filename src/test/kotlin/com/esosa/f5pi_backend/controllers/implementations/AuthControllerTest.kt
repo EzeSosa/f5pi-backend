@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
+const val SQL_INJECTION_USERNAME = "DELETE FROM USER WHERE 1 = 1"
 class AuthControllerTest : BaseIntegrationTest() {
 
     @Autowired
@@ -55,13 +56,12 @@ class AuthControllerTest : BaseIntegrationTest() {
         assertEquals(userCountBefore?.plus(1), userCountAfter)
     }
 
-    @Test
-    fun `should not check token with SQL injection payload`() {
+    fun registerAndLogin(password: String, fullName: String, email: String){
         RegisterRequest(
-            "DELETE FROM USER WHERE 1 = 1",
-            "DELETE FROM GAME WHERE 1 = 2",
-            "DELETE FROM FIELD WHERE 1 = 1",
-            "test@gmail.com"
+            SQL_INJECTION_USERNAME,
+            password,
+            fullName,
+            email,
         ).also {
             mockMvc.perform(
                 post("/auth/register")
@@ -74,40 +74,35 @@ class AuthControllerTest : BaseIntegrationTest() {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(toJson(LoginRequest(it.username, it.password)))
             ).andExpect(status().isOk)
-        }.also {
-            mockMvc.perform(
-                post("/auth/check-token")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(toJson(CheckTokenRequest("DELETE FROM USER WHERE 1 = 1")))
-            ).andExpect(status().isUnauthorized)
         }
     }
 
     @Test
-    fun `should not refresh token with SQL injection payload`() {
-        RegisterRequest(
-            "DELETE FROM USER WHERE 1 = 1",
+    fun `should not check token with SQL injection payload`() {
+        registerAndLogin(
             "DELETE FROM GAME WHERE 1 = 2",
             "DELETE FROM FIELD WHERE 1 = 1",
             "test@gmail.com"
-        ).also {
-            mockMvc.perform(
-                post("/auth/register")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(toJson(it))
-            ).andExpect(status().isCreated)
-        }.also {
-            mockMvc.perform(
-                post("/auth/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(toJson(LoginRequest(it.username, it.password)))
-            ).andExpect(status().isOk)
-        }.also {
-            mockMvc.perform(
-                post("/auth/refresh")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(toJson(RefreshTokenRequest("DELETE FROM USER WHERE 1 = 1")))
-            ).andExpect(status().isUnauthorized)
-        }
+        )
+        mockMvc.perform(
+            post("/auth/check-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(CheckTokenRequest(SQL_INJECTION_USERNAME)))
+        ).andExpect(status().isUnauthorized)
     }
+
+    @Test
+    fun `should not refresh token with SQL injection payload`() {
+        registerAndLogin(
+            "DELETE FROM GAME WHERE 1 = 2",
+            "DELETE FROM FIELD WHERE 1 = 1",
+            "test@gmail.com"
+        )
+        mockMvc.perform(
+            post("/auth/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(RefreshTokenRequest(SQL_INJECTION_USERNAME)))
+        ).andExpect(status().isUnauthorized)
+    }
+
 }
