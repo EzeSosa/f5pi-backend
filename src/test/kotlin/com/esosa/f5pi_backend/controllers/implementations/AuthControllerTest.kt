@@ -56,7 +56,7 @@ class AuthControllerTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun `should check token with SQL injection payload`() {
+    fun `should not check token with SQL injection payload`() {
         RegisterRequest(
             "DELETE FROM USER WHERE 1 = 1",
             "DELETE FROM GAME WHERE 1 = 2",
