@@ -7,14 +7,19 @@ import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
 import com.esosa.f5pi_backend.controllers.requests.RegisterRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.util.stream.Stream
 
 const val SQL_INJECTION_USERNAME = "DELETE FROM USER WHERE 1 = 1"
+
 class AuthControllerTest : BaseIntegrationTest() {
 
     @Autowired
@@ -55,8 +60,14 @@ class AuthControllerTest : BaseIntegrationTest() {
 
         assertEquals(userCountBefore?.plus(1), userCountAfter)
     }
-
-    fun registerAndLogin(password: String, fullName: String, email: String){
+    companion object {
+        @JvmStatic
+        private fun endpointAndRequestProvider(): Stream<Arguments> = Stream.of(
+            Arguments.of("/auth/check-token", CheckTokenRequest(SQL_INJECTION_USERNAME)),
+            Arguments.of("/auth/refresh", RefreshTokenRequest(SQL_INJECTION_USERNAME)),
+        )
+    }
+    private fun registerAndLogin(password: String, fullName: String, email: String) {
         RegisterRequest(
             SQL_INJECTION_USERNAME,
             password,
@@ -77,31 +88,18 @@ class AuthControllerTest : BaseIntegrationTest() {
         }
     }
 
-    @Test
-    fun `should not check token with SQL injection payload`() {
+    @ParameterizedTest
+    @MethodSource("endpointAndRequestProvider")
+    fun `should not allow SQL Injection payloads for checkToken `(endpoint:String , requestBody: Any){
         registerAndLogin(
-            "DELETE FROM GAME WHERE 1 = 2",
+            "DELETE FROM GAME WHERE 1 = 1",
             "DELETE FROM FIELD WHERE 1 = 1",
             "test@gmail.com"
         )
         mockMvc.perform(
-            post("/auth/check-token")
+            post(endpoint)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(CheckTokenRequest(SQL_INJECTION_USERNAME)))
-        ).andExpect(status().isUnauthorized)
-    }
-
-    @Test
-    fun `should not refresh token with SQL injection payload`() {
-        registerAndLogin(
-            "DELETE FROM GAME WHERE 1 = 2",
-            "DELETE FROM FIELD WHERE 1 = 1",
-            "test@gmail.com"
-        )
-        mockMvc.perform(
-            post("/auth/refresh")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(RefreshTokenRequest(SQL_INJECTION_USERNAME)))
+                .content(toJson(requestBody))
         ).andExpect(status().isUnauthorized)
     }
 
