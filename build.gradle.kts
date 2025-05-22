@@ -45,10 +45,12 @@ dependencies {
 	testImplementation("org.mockito:mockito-core:5.11.0")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 	testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
+	testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
 
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 }
 
 tasks.withType<KotlinCompile> {
