@@ -17,8 +17,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
 import org.springframework.data.domain.PageImpl
 import java.time.LocalDateTime
+import java.util.Optional
 import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
@@ -61,15 +63,38 @@ class UserServiceTest {
             email = "test@email.com",
             role = Role.USER,
         )
+        `when`(userRepository.save(user)).thenReturn(user)
+
+        val result1 = userService.saveUser(user)
+
         val testPlayers = listOf(
-            Player(name = "testPlayer", user = User(), imageURL = "www.url.com", createdAt = LocalDateTime.now(), id = UUID.randomUUID()),
-            Player()
+            PlayerResponse(playerId = UUID.randomUUID(), name = "testPlayer", imageURL = "www.url.com"),
+            PlayerResponse(playerId = UUID.randomUUID(), name = "testPlayer2", imageURL = "www.url2.com"),
         )
-        val playersPage = PageImpl<PlayerResponse>(testPlayers)
+        val playersPage = PageImpl(testPlayers)
+        `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
+        `when`(playerService.getUserPlayers(
+            result1,
+            0,
+            10,
+            "name",
+            "asc"))
+            .thenReturn(playersPage)
+
+
+        val result2 = userService.getUserPlayers(
+            user.id,
+            0,
+            10,
+            "name",
+            "asc"
+        )
+        assertEquals(2,result2.numberOfElements)
     }
 
     @Test
     fun getUserGames() {
+
     }
 
     @Test
