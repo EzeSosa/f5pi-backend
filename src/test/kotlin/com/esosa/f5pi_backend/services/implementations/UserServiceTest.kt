@@ -5,10 +5,8 @@ import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
-import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.data.enums.Role
 import com.esosa.f5pi_backend.data.models.Field
-import com.esosa.f5pi_backend.data.models.Player
 import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IUserRepository
@@ -24,26 +22,34 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageImpl
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.TemporalQueries.localDate
 import java.util.Optional
 import java.util.UUID
+import org.springframework.jdbc.core.JdbcTemplate
 
 @ExtendWith(MockitoExtension::class)
 class UserServiceTest {
     @Mock
+    private lateinit var jdbcTemplate: JdbcTemplate
+
+    @Mock
     lateinit var userRepository: IUserRepository
+
     @Mock
     lateinit var gameService: IGameService
+
     @Mock
     lateinit var fieldService: IFieldService
+
     @Mock
     lateinit var seasonService: ISeasonService
+
     @Mock
     lateinit var playerService: IPlayerService
+
     @InjectMocks
     lateinit var userService: UserService
 
@@ -60,9 +66,10 @@ class UserServiceTest {
 
         val result = userService.saveUser(user)
 
-        assertEquals(user.username,result.username)
+        assertEquals(user.username, result.username)
         assertEquals(user.password, result.password)
     }
+
     @Test
     fun getUserPlayers() {
         val user = User(
@@ -82,12 +89,15 @@ class UserServiceTest {
         )
         val playersPage = PageImpl(testPlayers)
         `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
-        `when`(playerService.getUserPlayers(
-            result1,
-            0,
-            10,
-            "name",
-            "asc"))
+        `when`(
+            playerService.getUserPlayers(
+                result1,
+                0,
+                10,
+                "name",
+                "asc"
+            )
+        )
             .thenReturn(playersPage)
 
 
@@ -98,7 +108,7 @@ class UserServiceTest {
             "name",
             "asc"
         )
-        assertEquals(2,result2.numberOfElements)
+        assertEquals(2, result2.numberOfElements)
     }
 
     @Test
@@ -120,7 +130,7 @@ class UserServiceTest {
             user = user,
             id = UUID.randomUUID(),
         )
-        `when`( fieldService.findFieldByIdOrThrowException(field.id)).thenReturn(field)
+        `when`(fieldService.findFieldByIdOrThrowException(field.id)).thenReturn(field)
 
         val season = Season(
             name = "testSeason",
@@ -134,23 +144,24 @@ class UserServiceTest {
 
 
         val testGames = listOf(
-            GameResponse(UUID.randomUUID(), LocalDate.now(), 1235.00, "Almagro", "2025" ),
-            GameResponse(UUID.randomUUID(), LocalDate.now().minusDays(1), 1235.00, "Alumni", "2025" ),
+            GameResponse(UUID.randomUUID(), LocalDate.now(), 1235.00, "Almagro", "2025"),
+            GameResponse(UUID.randomUUID(), LocalDate.now().minusDays(1), 1235.00, "Alumni", "2025"),
         )
 
         val gamesPage = PageImpl(testGames)
 
         `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
-        `when`(gameService.getGamesByUser(
-            result1,
-            LocalDate.now().minusDays(1),
-            LocalDate.now(),
-            field,
-            season,
-            0,
-            10,
-            "name",
-            "asc"
+        `when`(
+            gameService.getGamesByUser(
+                result1,
+                LocalDate.now().minusDays(1),
+                LocalDate.now(),
+                field,
+                season,
+                0,
+                10,
+                "name",
+                "asc"
             )
         ).thenReturn(gamesPage)
 
@@ -162,11 +173,11 @@ class UserServiceTest {
             season.id,
             0,
             10,
-           "name",
+            "name",
             "asc"
-            );
+        );
 
-        assertEquals(2,result2.numberOfElements)
+        assertEquals(2, result2.numberOfElements)
     }
 
     @Test
@@ -197,13 +208,15 @@ class UserServiceTest {
 
         val fieldsPage = PageImpl(testFields)
 
-        `when`(fieldService.getUserFields(
-            result1,
-            0,
-            10,
-            "name",
-            "asc"
-        )).thenReturn(fieldsPage)
+        `when`(
+            fieldService.getUserFields(
+                result1,
+                0,
+                10,
+                "name",
+                "asc"
+            )
+        ).thenReturn(fieldsPage)
 
         val result2 = userService.getUserFields(
             user.id,
@@ -213,7 +226,7 @@ class UserServiceTest {
             "asc"
         )
 
-        assertEquals(2,result2.numberOfElements)
+        assertEquals(2, result2.numberOfElements)
     }
 
     @Test
@@ -231,20 +244,32 @@ class UserServiceTest {
 
         `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
 
-        val testSeasons =  listOf(
-            SeasonResponse(id = UUID.randomUUID(), name = "2025", initialDate = LocalDate.now().minusDays(30), finalDate = LocalDate.now()),
-            SeasonResponse(id = UUID.randomUUID(), name = "2024", initialDate = LocalDate.now().minusDays(30), finalDate = LocalDate.now())
+        val testSeasons = listOf(
+            SeasonResponse(
+                id = UUID.randomUUID(),
+                name = "2025",
+                initialDate = LocalDate.now().minusDays(30),
+                finalDate = LocalDate.now()
+            ),
+            SeasonResponse(
+                id = UUID.randomUUID(),
+                name = "2024",
+                initialDate = LocalDate.now().minusDays(30),
+                finalDate = LocalDate.now()
+            )
         )
 
         val seasonsPage = PageImpl(testSeasons)
 
-        `when`(seasonService.getUserSeasons(
-            result1,
-            0,
-            10,
-            "name",
-            "asc"
-        )).thenReturn(seasonsPage)
+        `when`(
+            seasonService.getUserSeasons(
+                result1,
+                0,
+                10,
+                "name",
+                "asc"
+            )
+        ).thenReturn(seasonsPage)
 
         val result2 = userService.getUserSeasons(
             user.id,
@@ -254,7 +279,7 @@ class UserServiceTest {
             "asc"
         )
 
-        assertEquals(2,result2.numberOfElements)
+        assertEquals(2, result2.numberOfElements)
     }
 
     @Test
@@ -274,7 +299,7 @@ class UserServiceTest {
             fullName = "testFullName2",
             email = "test2@email.com",
         )
-        val modifiedUser = User("testUser", "testPassword","testFullName2", "test2@email.com", user.role)
+        val modifiedUser = User("testUser", "testPassword", "testFullName2", "test2@email.com", user.role)
 
         `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
         `when`(userRepository.save(result1)).thenReturn(modifiedUser)
@@ -290,6 +315,22 @@ class UserServiceTest {
 
     @Test
     fun deleteUser() {
-    }
+        val user = User(
+            username = "testUser",
+            password = "testPassword",
+            fullName = "testFullName",
+            email = "test@email.com",
+            role = Role.USER
+        )
+        `when`(userRepository.save(user)).thenReturn(user)
 
+        val result1 = userService.saveUser(user)
+
+        `when`(userRepository.existsById(result1.id)).thenReturn(true)
+
+        assertDoesNotThrow {
+            userService.deleteUser(result1.id)
+        }
+
+    }
 }
