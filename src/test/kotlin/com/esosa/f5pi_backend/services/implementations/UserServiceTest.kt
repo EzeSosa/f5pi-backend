@@ -141,10 +141,12 @@ class UserServiceTest {
             result1,
             LocalDate.now().minusDays(1),
             LocalDate.now(),
-            pageNumber = 0,
-            pageSize = 10,
-            sortAttribute = "name",
-            sortOrder = "asc"
+            field,
+            season,
+            0,
+            10,
+            "name",
+            "asc"
             )
         ).thenReturn(gamesPage)
 
