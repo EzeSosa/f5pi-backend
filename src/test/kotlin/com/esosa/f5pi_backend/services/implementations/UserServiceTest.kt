@@ -3,6 +3,7 @@ package com.esosa.f5pi_backend.services.implementations
 import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
+import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.data.enums.Role
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
@@ -215,11 +216,65 @@ class UserServiceTest {
 
     @Test
     fun getUserSeasons() {
-        val user = User()
+        val user = User(
+            username = "testUser",
+            password = "testPassword",
+            fullName = "testFullName",
+            email = "test@email.com",
+            role = Role.USER,
+        )
+        `when`(userRepository.save(user)).thenReturn(user)
+
+        val result1 = userService.saveUser(user)
+
+        `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
+
+        val testSeasons =  listOf(
+            SeasonResponse(id = UUID.randomUUID(), name = "2025", initialDate = LocalDate.now().minusDays(30), finalDate = LocalDate.now()),
+            SeasonResponse(id = UUID.randomUUID(), name = "2024", initialDate = LocalDate.now().minusDays(30), finalDate = LocalDate.now())
+        )
+
+        val seasonsPage = PageImpl(testSeasons)
+
+        `when`(seasonService.getUserSeasons(
+            result1,
+            0,
+            10,
+            "name",
+            "asc"
+        )).thenReturn(seasonsPage)
+
+        val result2 = userService.getUserSeasons(
+            user.id,
+            0,
+            10,
+            "name",
+            "asc"
+        )
+
+        assertEquals(2,result2.numberOfElements)
     }
 
     @Test
     fun updateUser() {
+        val user = User(
+            username = "testUser",
+            password = "testPassword",
+            fullName = "testFullName",
+            email = "test@email.com",
+            role = Role.USER
+        )
+        `when`(userRepository.save(user)).thenReturn(user)
+
+        val result1 = userService.saveUser(user)
+
+        val updateUserRequest = User(
+            username = "testUser",
+            password = "testPassword",
+            fullName = "testFullName",
+            email = "test2@email.com",
+
+
     }
 
     @Test
