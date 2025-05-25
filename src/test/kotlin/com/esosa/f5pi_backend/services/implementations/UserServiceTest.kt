@@ -1,5 +1,6 @@
 package com.esosa.f5pi_backend.services.implementations
 
+import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.data.enums.Role
@@ -167,11 +168,54 @@ class UserServiceTest {
 
     @Test
     fun getUserFields() {
+        val user = User(
+            username = "testUser",
+            password = "testPassword",
+            fullName = "testFullName",
+            email = "test@email.com",
+            role = Role.USER,
+        )
+        `when`(userRepository.save(user)).thenReturn(user)
 
+        val result1 = userService.saveUser(user)
+
+        `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
+
+        val testFields = listOf(
+            FieldResponse(
+                fieldId = UUID.randomUUID(),
+                fieldName = "testField",
+            ),
+            FieldResponse(
+                fieldId = UUID.randomUUID(),
+                fieldName = "testField2",
+            )
+        )
+
+        val fieldsPage = PageImpl(testFields)
+
+        `when`(fieldService.getUserFields(
+            result1,
+            0,
+            10,
+            "name",
+            "asc"
+        )).thenReturn(fieldsPage)
+
+        val result2 = userService.getUserFields(
+            user.id,
+            0,
+            10,
+            "name",
+            "asc"
+        )
+
+        assertEquals(2,result2.numberOfElements)
     }
 
     @Test
     fun getUserSeasons() {
+        val user = User()
     }
 
     @Test
