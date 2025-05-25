@@ -1,8 +1,11 @@
 package com.esosa.f5pi_backend.services.implementations
 
+import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.data.enums.Role
+import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
+import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IUserRepository
 import com.esosa.f5pi_backend.services.interfaces.IFieldService
@@ -19,7 +22,9 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.springframework.data.domain.PageImpl
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.TemporalQueries.localDate
 import java.util.Optional
 import java.util.UUID
 
@@ -94,11 +99,73 @@ class UserServiceTest {
 
     @Test
     fun getUserGames() {
+        val user = User(
+            username = "testUser",
+            password = "testPassword",
+            fullName = "testFullName",
+            email = "test@email.com",
+            role = Role.USER,
+        )
+        `when`(userRepository.save(user)).thenReturn(user)
 
+        val result1 = userService.saveUser(user)
+
+
+        val field = Field(
+            name = "testField",
+            user = user,
+            id = UUID.randomUUID(),
+        )
+        `when`( fieldService.findFieldByIdOrThrowException(field.id)).thenReturn(field)
+
+        val season = Season(
+            name = "testSeason",
+            initialDate = LocalDate.now().minusDays(30),
+            finalDate = LocalDate.now(),
+            user = user,
+            createdAt = LocalDateTime.now(),
+            id = UUID.randomUUID()
+        )
+        `when`(seasonService.findSeasonByIdOrThrowException(season.id)).thenReturn(season)
+
+
+        val testGames = listOf(
+            GameResponse(UUID.randomUUID(), LocalDate.now(), 1235.00, "Almagro", "2025" ),
+            GameResponse(UUID.randomUUID(), LocalDate.now().minusDays(1), 1235.00, "Alumni", "2025" ),
+        )
+
+        val gamesPage = PageImpl(testGames)
+
+        `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
+        `when`(gameService.getGamesByUser(
+            result1,
+            LocalDate.now().minusDays(1),
+            LocalDate.now(),
+            pageNumber = 0,
+            pageSize = 10,
+            sortAttribute = "name",
+            sortOrder = "asc"
+            )
+        ).thenReturn(gamesPage)
+
+        val result2 = userService.getUserGames(
+            user.id,
+            LocalDate.now().minusDays(1),
+            LocalDate.now(),
+            field.id,
+            season.id,
+            0,
+            10,
+           "name",
+            "asc"
+            );
+
+        assertEquals(2,result2.numberOfElements)
     }
 
     @Test
     fun getUserFields() {
+
     }
 
     @Test
