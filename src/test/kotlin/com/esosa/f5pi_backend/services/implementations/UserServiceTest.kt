@@ -1,9 +1,11 @@
 package com.esosa.f5pi_backend.services.implementations
 
+import com.esosa.f5pi_backend.controllers.requests.UpdateUserRequest
 import com.esosa.f5pi_backend.controllers.responses.FieldResponse
 import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
+import com.esosa.f5pi_backend.controllers.responses.UserResponse
 import com.esosa.f5pi_backend.data.enums.Role
 import com.esosa.f5pi_backend.data.models.Field
 import com.esosa.f5pi_backend.data.models.Player
@@ -268,12 +270,21 @@ class UserServiceTest {
 
         val result1 = userService.saveUser(user)
 
-        val updateUserRequest = User(
-            username = "testUser",
-            password = "testPassword",
-            fullName = "testFullName",
+        val updateUserRequest = UpdateUserRequest(
+            fullName = "testFullName2",
             email = "test2@email.com",
+        )
+        val modifiedUser = User("testUser", "testPassword","testFullName2", "test2@email.com", user.role)
 
+        `when`(userRepository.findById(result1.id)).thenReturn(Optional.of(result1))
+        `when`(userRepository.save(result1)).thenReturn(modifiedUser)
+
+        val result2 = userService.updateUser(
+            user.id,
+            updateUserRequest
+        )
+        assertEquals(modifiedUser.fullName, result2.fullName)
+        assertEquals(modifiedUser.email, result2.email)
 
     }
 
