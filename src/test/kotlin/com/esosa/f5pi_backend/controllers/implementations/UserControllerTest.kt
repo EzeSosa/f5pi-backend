@@ -5,11 +5,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.http.MediaType
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.util.*
 
 class UserControllerTest : BaseIntegrationTest()  {
+    companion object UserTestData {
+        val USER_ID_WITH = UUID.fromString("58fae25b-ea38-4e7b-ab2d-9f555a67836b")
+        val USER_ID_WITHOUT = UUID.fromString("68fae25b-ea38-4e7b-ab2d-9f555a67836e")
+    }
  @Test
  fun `should return bad request when user does not exists`() {
   val userId = UUID.randomUUID()
@@ -32,7 +35,7 @@ class UserControllerTest : BaseIntegrationTest()  {
    val userId = UUID.fromString("58fae25b-ea38-4e7b-ab2d-9f555a67836b")
 
    mockMvc.perform(
-    get("/api/v1/users/{userId}/fields", userId.toString())
+    get("/api/v1/users/{userId}/fields",USER_ID_WITH.toString())
         .param("pageNumber", "0")
         .param("pageSize", "2")
         .param("sortAttribute", "createdAt")
@@ -48,7 +51,7 @@ class UserControllerTest : BaseIntegrationTest()  {
    val userId = UUID.fromString("68fae25b-ea38-4e7b-ab2d-9f555a67836e")
 
    mockMvc.perform(
-    get("/api/v1/users/{userId}/fields", userId.toString())
+    get("/api/v1/users/{userId}/fields", USER_ID_WITHOUT.toString())
         .param("pageNumber", "0")
         .param("pageSize", "2")
         .param("sortAttribute", "createdAt")
@@ -57,5 +60,32 @@ class UserControllerTest : BaseIntegrationTest()  {
      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
        .andExpect(jsonPath("$.content.length()").value(0))
  }
+    @Test
+    fun`should return ok when user has players`() {
+        // Implement test logic here
+        mockMvc.perform(
+            get("/api/v1/users/{userId}/players", USER_ID_WITH.toString())
+                .param("pageNumber", "0")
+                .param("pageSize", "2")
+                .param("sortAttribute", "createdAt")
+                .param("sortOrder", "desc")
+        ).andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.content.length()").value(1))
 
+    }
+    @Test
+    fun `should return ok when user does not have players`() {
+        // Implement test logic here
+    }
+
+    @Test
+    fun`should return ok when user has games` () {
+        // Implement test logic here
+    }
+
+    @Test
+    fun `should return ok when user does not have games`() {
+        // Implement test logic here
+    }
 }
