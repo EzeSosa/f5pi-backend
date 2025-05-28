@@ -1,9 +1,6 @@
 package com.esosa.f5pi_backend.controllers.implementations
 
 import com.esosa.f5pi_backend.controllers.base.BaseIntegrationTest
-import com.esosa.f5pi_backend.controllers.requests.CheckTokenRequest
-import com.esosa.f5pi_backend.controllers.requests.RefreshTokenRequest
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
