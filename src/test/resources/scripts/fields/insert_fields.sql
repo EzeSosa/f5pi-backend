@@ -3,4 +3,4 @@ VALUES ('58fae25b-ea38-4e7b-ab2d-9f555a67836b', 'esosa', '123456', 'esosa@gmail.
        ('68fae25b-ea38-4e7b-ab2d-9f555a67836e', 'mcrosetto', 'abcdef', 'mcrosetto@gmail.com');
 
 INSERT INTO field (id, name, user_id)
-VALUES ('58fae25b-ea38-4e7b-ab2d-9f555a67836c', 'Test Player', '58fae25b-ea38-4e7b-ab2d-9f555a67836b');
+VALUES ('58fae25b-ea38-4e7b-ab2d-9f555a67836c', 'Test Field', '58fae25b-ea38-4e7b-ab2d-9f555a67836b');

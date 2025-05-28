@@ -87,7 +87,7 @@ class AuthService(
         )
 
     private fun generateTokenTypeClaim(tokenType: TokenType): Map<String, Any> =
-        hashMapOf("tokenTypeinterface" to tokenType)
+        hashMapOf("tokenType" to tokenType)
 
     private fun ifTokenInvalidThrowException(token: String, userDetails: UserDetails) {
         if (!jwtService.isTokenValid(token, userDetails))
