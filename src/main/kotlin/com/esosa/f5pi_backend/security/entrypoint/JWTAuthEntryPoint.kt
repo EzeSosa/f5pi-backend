@@ -8,8 +8,8 @@ import com.esosa.f5pi_backend.security.utils.Constants.Companion.MISSING_HEADER_
 import com.esosa.f5pi_backend.security.utils.Constants.Companion.SIGNATURE_EXCEPTION_MESSAGE
 import com.esosa.f5pi_backend.security.utils.Constants.Companion.USERNAME_NOT_FOUND_MESSAGE
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.jsonwebtoken.ClaimJwtException
 import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.SignatureException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -60,7 +60,7 @@ class JWTAuthEntryPoint(private val objectMapper: ObjectMapper) : Authentication
         return when (throwable) {
             is ExpiredJwtException -> EXPIRED_JWT_EXCEPTION_MESSAGE
             is SignatureException -> SIGNATURE_EXCEPTION_MESSAGE
-            is ClaimJwtException -> CLAIMS_JWT_EXCEPTION_MESSAGE
+            is MalformedJwtException -> CLAIMS_JWT_EXCEPTION_MESSAGE
             is IllegalArgumentException -> MISSING_HEADER_EXCEPTION_MESSAGE
             is UsernameNotFoundException -> USERNAME_NOT_FOUND_MESSAGE
             else -> JWT_EXCEPTION_DEFAULT_MESSAGE

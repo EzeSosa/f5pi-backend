@@ -11,6 +11,7 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.apache.http.HttpHeaders.AUTHORIZATION
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
@@ -22,11 +23,15 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class JWTAuthenticationFilter(
-    private val userDetailsService: CustomUserDetailsService,
+    @Qualifier("customUserDetailsService") private val userDetailsService: CustomUserDetailsService,
     private val jwtService: JWTService,
     private val pathMatcher: AntPathMatcher,
     private val entryPoint: JWTAuthEntryPoint
 ) : OncePerRequestFilter() {
+
+    companion object {
+        private const val BEARER_PREFIX = "Bearer "
+    }
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -49,7 +54,7 @@ class JWTAuthenticationFilter(
     private fun authenticateRequest(request: HttpServletRequest) {
         val authHeader = request.getValidAuthHeader()
         val token = authHeader.extractToken()
-        val username = runCatchingAuthException { jwtService.extractUsernameFromToken(token) }
+        val username = jwtService.extractUsernameFromToken(token)
         val user = runCatchingAuthException { userDetailsService.loadUserByUsername(username) }
 
         if (jwtService.isTokenValid(token, user))
@@ -58,14 +63,14 @@ class JWTAuthenticationFilter(
 
     private fun HttpServletRequest.getValidAuthHeader(): String =
         getHeader(AUTHORIZATION)
-            ?.takeIf { it.startsWith("Bearer ") }
+            ?.takeIf { it.startsWith(BEARER_PREFIX) }
             ?: throw JWTAuthException(
                 MISSING_HEADER_EXCEPTION_MESSAGE.first,
                 IllegalArgumentException("Authorization header is missing or invalid")
             )
 
     private fun String.extractToken(): String =
-        substringAfter("Bearer ").takeIf { it.isNotBlank() }
+        substringAfter(BEARER_PREFIX).takeIf { it.isNotBlank() }
             ?: throw IllegalStateException("Invalid JWT format")
 
     private fun updateContext(user: UserDetails, request: HttpServletRequest) {

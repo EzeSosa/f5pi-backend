@@ -27,9 +27,9 @@ class SecurityConfig(
         jwtAuthenticationFilter: JWTAuthenticationFilter
     ) : SecurityFilterChain =
         http
-            .csrf { csrf -> csrf.disable() }
-            .authorizeHttpRequests { httpRequests ->
-                httpRequests
+            .csrf { it.disable() }
+            .authorizeHttpRequests {
+                it
                     .requestMatchers(*WHITE_LIST_URLS, *SWAGGER_URLS).permitAll()
                     .requestMatchers(HttpMethod.GET, "api/v1/**").permitAll()
                     .anyRequest().authenticated()
