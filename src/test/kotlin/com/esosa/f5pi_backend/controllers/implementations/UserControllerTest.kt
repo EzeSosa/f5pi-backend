@@ -13,8 +13,8 @@ import java.util.stream.Stream
 
 class UserControllerTest : BaseIntegrationTest() {
     companion object UserTestData {
-        val USER_UUID_WITH = UUID.fromString("58fae25b-ea38-4e7b-ab2d-9f555a67836b")
-        val USER_UUID_WITHOUT = UUID.fromString("68fae25b-ea38-4e7b-ab2d-9f555a67836e")
+        val USER_UUID_WITH_DATA = UUID.fromString("58fae25b-ea38-4e7b-ab2d-9f555a67836b")
+        val USER_UUID_WITHOUT_DATA = UUID.fromString("68fae25b-ea38-4e7b-ab2d-9f555a67836e")
 
         @JvmStatic
         private fun endpointProviderForUserDoesNotExist(): Stream<Arguments> = Stream.of(
@@ -25,12 +25,12 @@ class UserControllerTest : BaseIntegrationTest() {
 
         @JvmStatic
         private fun endpointProviderForExistentUser(): Stream<Arguments> = Stream.of(
-            Arguments.of("/api/v1/users/{userId}/fields", USER_UUID_WITH, 1, "createdAt"),
-            Arguments.of("/api/v1/users/{userId}/fields", USER_UUID_WITHOUT, 0, "createdAt"),
-            Arguments.of("/api/v1/users/{userId}/players", USER_UUID_WITH, 1, "createdAt"),
-            Arguments.of("/api/v1/users/{userId}/players", USER_UUID_WITHOUT, 0, "createdAt"),
-            Arguments.of("/api/v1/users/{userId}/games", USER_UUID_WITH, 1, "date"),
-            Arguments.of("/api/v1/users/{userId}/games", USER_UUID_WITHOUT, 0, "date"),
+            Arguments.of("/api/v1/users/{userId}/fields", USER_UUID_WITH_DATA, 1, "createdAt"),
+            Arguments.of("/api/v1/users/{userId}/fields", USER_UUID_WITHOUT_DATA, 0, "createdAt"),
+            Arguments.of("/api/v1/users/{userId}/players", USER_UUID_WITH_DATA, 1, "createdAt"),
+            Arguments.of("/api/v1/users/{userId}/players", USER_UUID_WITHOUT_DATA, 0, "createdAt"),
+            Arguments.of("/api/v1/users/{userId}/games", USER_UUID_WITH_DATA, 1, "date"),
+            Arguments.of("/api/v1/users/{userId}/games", USER_UUID_WITHOUT_DATA, 0, "date"),
 
             )
     }
