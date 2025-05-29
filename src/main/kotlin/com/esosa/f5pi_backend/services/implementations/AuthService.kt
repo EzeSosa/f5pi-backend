@@ -18,7 +18,6 @@ import com.esosa.f5pi_backend.services.interfaces.IUserService
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -27,7 +26,6 @@ import java.util.*
 @Service
 class AuthService(
     private val userService: IUserService,
-    private val userDetailsService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
     private val authManager: AuthenticationManager,
     private val jwtService: IJWTService,
@@ -55,24 +53,21 @@ class AuthService(
 
     override fun refreshToken(refreshTokenRequest: RefreshTokenRequest): RefreshTokenResponse =
         with(refreshTokenRequest) {
-            jwtService.extractUsernameFromToken(refreshToken).let { username ->
-                ifNotRefreshTokenThrowException(refreshToken)
-                val currentUserDetails = userDetailsService.loadUserByUsername(username)
-                ifTokenInvalidThrowException(refreshToken, currentUserDetails.username)
-                RefreshTokenResponse(generateAccessToken(currentUserDetails.username))
-            }
+            ifNotRefreshTokenThrowException(refreshToken)
+            ifTokenExpiredThrowException(refreshToken)
+            RefreshTokenResponse(
+                generateAccessToken(jwtService.extractUsernameFromToken(refreshToken))
+            )
         }
 
     override fun checkToken(checkTokenRequest: CheckTokenRequest): UserResponse =
         with(checkTokenRequest) {
             ifNotAccessTokenThrowException(accessToken)
-
-            val username = jwtService.extractUsernameFromToken(accessToken)
-            val userDetails = userDetailsService.loadUserByUsername(username)
-            ifTokenInvalidThrowException(accessToken, userDetails.username)
-
-            userService.findUserByUsernameOrThrowException(username)
-                .buildUserResponse()
+            ifTokenExpiredThrowException(accessToken)
+            jwtService.extractUsernameFromToken(accessToken).let {
+                userService.findUserByUsernameOrThrowException(it)
+                    .buildUserResponse()
+            }
         }
 
     private fun generateAccessToken(username: String): String =
@@ -92,9 +87,9 @@ class AuthService(
     private fun generateTokenTypeClaim(tokenType: TokenType): Map<String, Any> =
         hashMapOf("tokenType" to tokenType)
 
-    private fun ifTokenInvalidThrowException(token: String, username: String) {
-        if (!jwtService.isTokenValid(token, username))
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not valid")
+    private fun ifTokenExpiredThrowException(token: String) {
+        if (!jwtService.isTokenExpired(token))
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is expired")
     }
 
     private fun ifNotRefreshTokenThrowException(token: String) {

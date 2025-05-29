@@ -8,4 +8,5 @@ interface IJWTService {
     fun extractUsernameFromToken(token: String): String
     fun extractTokenTypeFromToken(token: String): TokenType
     fun isTokenValid(token: String, username: String): Boolean
+    fun isTokenExpired(token: String): Boolean
 }

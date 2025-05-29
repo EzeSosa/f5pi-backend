@@ -32,13 +32,13 @@ class JWTService(jwtProperties: JWTProperties) : IJWTService {
     override fun isTokenValid(token: String, username: String): Boolean =
         !isTokenExpired(token) && subjectEqualsUsername(token, username)
 
-    private fun subjectEqualsUsername(token: String, username: String): Boolean =
-        getAllClaimsFromToken(token).subject == username
-
-    private fun isTokenExpired(token: String): Boolean =
+    override fun isTokenExpired(token: String): Boolean =
         getAllClaimsFromToken(token)
             .expiration
             .before(Date(System.currentTimeMillis()))
+
+    private fun subjectEqualsUsername(token: String, username: String): Boolean =
+        getAllClaimsFromToken(token).subject == username
 
     private fun getAllClaimsFromToken(token: String): Claims =
         Jwts.parser()
