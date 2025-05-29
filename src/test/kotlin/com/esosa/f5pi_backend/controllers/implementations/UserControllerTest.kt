@@ -37,7 +37,7 @@ class UserControllerTest : BaseIntegrationTest() {
 
     @ParameterizedTest
     @MethodSource("endpointProviderForUserDoesNotExist")
-    fun `should return bad request when user does not exists and we try to get fields or players or games`(
+    fun `should return bad request when user does not exist and we try to get fields or players or games`(
         endpoint: String,
         userId: UUID
     ) {
