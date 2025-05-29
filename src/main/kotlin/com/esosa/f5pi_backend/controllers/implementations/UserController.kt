@@ -7,16 +7,20 @@ import com.esosa.f5pi_backend.controllers.responses.GameResponse
 import com.esosa.f5pi_backend.controllers.responses.PlayerResponse
 import com.esosa.f5pi_backend.controllers.responses.SeasonResponse
 import com.esosa.f5pi_backend.controllers.responses.UserResponse
+import com.esosa.f5pi_backend.services.interfaces.IUserDataService
 import com.esosa.f5pi_backend.services.interfaces.IUserService
 import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 @RestController
-class UserController(private val userService: IUserService) : IUserController {
+class UserController(
+    private val userService: IUserService,
+    private val userDataService: IUserDataService
+) : IUserController {
     override fun getUserPlayers(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<PlayerResponse> =
-        userService.getUserPlayers(userId, pageNumber, pageSize, sortAttribute, sortOrder)
+        userDataService.getUserPlayers(userId, pageNumber, pageSize, sortAttribute, sortOrder)
 
     override fun getUserGames(
         userId: UUID,
@@ -29,13 +33,13 @@ class UserController(private val userService: IUserService) : IUserController {
         sortAttribute: String,
         sortOrder: String
     ): Page<GameResponse> =
-        userService.getUserGames(userId, dateFrom, dateTo, fieldId, seasonId, pageNumber, pageSize, sortAttribute, sortOrder)
+        userDataService.getUserGames(userId, dateFrom, dateTo, fieldId, seasonId, pageNumber, pageSize, sortAttribute, sortOrder)
 
     override fun getUserFields(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<FieldResponse> =
-        userService.getUserFields(userId, pageNumber, pageSize, sortAttribute, sortOrder)
+        userDataService.getUserFields(userId, pageNumber, pageSize, sortAttribute, sortOrder)
 
     override fun getUserSeasons(userId: UUID, pageNumber: Int, pageSize: Int, sortAttribute: String, sortOrder: String): Page<SeasonResponse> =
-        userService.getUserSeasons(userId, pageNumber, pageSize, sortAttribute, sortOrder)
+        userDataService.getUserSeasons(userId, pageNumber, pageSize, sortAttribute, sortOrder)
 
     override fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse =
         userService.updateUser(userId, updateUserRequest)
