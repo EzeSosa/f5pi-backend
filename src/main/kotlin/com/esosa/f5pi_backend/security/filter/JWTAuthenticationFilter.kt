@@ -52,7 +52,7 @@ class JWTAuthenticationFilter(
 
     private fun authenticateRequest(request: HttpServletRequest) {
         val token = request.getTokenFromAuthHeader()
-        val username = jwtService.extractUsernameFromToken(token)
+        val username = runCatchingAuthException { jwtService.extractUsernameFromToken(token) }
         val user = runCatchingAuthException { userDetailsService.loadUserByUsername(username) }
 
         if (jwtService.isTokenValid(token, username))
