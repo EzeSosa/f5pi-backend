@@ -34,7 +34,7 @@ class AuthService(
 
     override fun register(registerRequest: RegisterRequest) {
         with(registerRequest) {
-            validateExistsUsername(username)
+            userService.ifUsernameExistsThrowException(username)
             userService.saveUser(buildUser())
         }
     }
@@ -84,7 +84,7 @@ class AuthService(
             generateTokenTypeClaim(REFRESH)
         )
 
-    private fun generateTokenTypeClaim(tokenType: TokenType): Map<String, Any> =
+    private fun generateTokenTypeClaim(tokenType: TokenType): Map<String, TokenType> =
         hashMapOf("tokenType" to tokenType)
 
     private fun ifTokenExpiredThrowException(token: String) {
@@ -101,9 +101,6 @@ class AuthService(
         if (jwtService.extractTokenTypeFromToken(token) != ACCESS)
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not an access token")
     }
-
-    private fun validateExistsUsername(username: String) =
-        userService.ifExistsUsernameThrowException(username)
 
     private fun RegisterRequest.buildUser(): User =
         User(username, passwordEncoder.encode(password), fullName, email)

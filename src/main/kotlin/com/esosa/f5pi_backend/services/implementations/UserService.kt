@@ -18,7 +18,7 @@ class UserService(
     override fun saveUser(user: User): User =
         userRepository.save(user)
 
-    override fun ifExistsUsernameThrowException(username: String) {
+    override fun ifUsernameExistsThrowException(username: String) {
         if (userRepository.existsByUsername(username))
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists")
     }

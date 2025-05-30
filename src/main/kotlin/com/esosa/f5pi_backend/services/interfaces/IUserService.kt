@@ -7,7 +7,7 @@ import java.util.*
 
 interface IUserService {
     fun saveUser(user: User): User
-    fun ifExistsUsernameThrowException(username: String)
+    fun ifUsernameExistsThrowException(username: String)
     fun findUserByUsernameOrThrowException(username: String): User
     fun findUserByIdOrThrowException(userId: UUID): User
     fun updateUser(userId: UUID, updateUserRequest: UpdateUserRequest): UserResponse
