@@ -66,9 +66,10 @@ class FieldServiceTest {
         whenever(fieldRepository.existsByNameAndUser(TestFieldRequests.CREATE_REQUEST.name, user))
             .thenReturn(true)
 
-        assertThrows<ResponseStatusException> {
+        val exception = assertThrows<ResponseStatusException> {
             fieldService.saveField(TestFieldRequests.CREATE_REQUEST)
         }
+        assertEquals("Field name ${TestFieldRequests.CREATE_REQUEST.name} already exists for the user", exception.reason)
 
     }
 
@@ -108,9 +109,10 @@ class FieldServiceTest {
         whenever(fieldRepository.findById(fieldId))
             .thenReturn(Optional.empty())
 
-        assertThrows<ResponseStatusException> {
+        val exception = assertThrows<ResponseStatusException> {
             fieldService.updateField(fieldId, TestFieldRequests.UPDATE_REQUEST)
         }
+        assertEquals("Field with id $fieldId does not exist", exception.reason)
 
     }
 
