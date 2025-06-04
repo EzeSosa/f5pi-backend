@@ -88,7 +88,7 @@ class AuthService(
         hashMapOf("tokenType" to tokenType)
 
     private fun ifTokenExpiredThrowException(token: String) {
-        if (!jwtService.isTokenExpired(token))
+        if (jwtService.isTokenExpired(token))
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is expired")
     }
 
