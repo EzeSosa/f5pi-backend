@@ -65,7 +65,7 @@ class JWTAuthenticationFilter(
             ?.substringAfter(BEARER_PREFIX)
             ?: throw JWTAuthException(
                 MISSING_HEADER_EXCEPTION_MESSAGE.first,
-                IllegalArgumentException()
+                IllegalArgumentException(MISSING_HEADER_EXCEPTION_MESSAGE.first)
             )
 
     private fun updateContext(user: UserDetails, request: HttpServletRequest) {
