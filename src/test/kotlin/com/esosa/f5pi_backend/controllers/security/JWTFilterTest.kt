@@ -77,10 +77,11 @@ class JWTFilterTest {
     }
 
     private fun setupValidJwtFlow() {
-        val userDetails = mock<UserDetails>()
-        whenever(jwtService.extractUsernameFromToken(eq(TEST_TOKEN))).thenReturn(TEST_USERNAME)
-        whenever(customUserDetailsService.loadUserByUsername(TEST_USERNAME)).thenReturn(userDetails)
-        whenever(jwtService.isTokenValid(TEST_TOKEN, userDetails)).thenReturn(true)
+        mock<UserDetails>().also {
+            whenever(jwtService.extractUsernameFromToken(eq(TEST_TOKEN))).thenReturn(TEST_USERNAME)
+            whenever(customUserDetailsService.loadUserByUsername(TEST_USERNAME)).thenReturn(it)
+            whenever(jwtService.isTokenValid(TEST_TOKEN, TEST_USERNAME)).thenReturn(true)
+        }
     }
 
     private fun setupMalformedJwtFlow() {

@@ -2,7 +2,7 @@ package com.esosa.f5pi_backend.security.filter
 
 import com.esosa.f5pi_backend.security.entrypoint.JWTAuthEntryPoint
 import com.esosa.f5pi_backend.security.entrypoint.JWTAuthException
-import com.esosa.f5pi_backend.security.jwt.JWTService
+import com.esosa.f5pi_backend.security.jwt.IJWTService
 import com.esosa.f5pi_backend.security.service.CustomUserDetailsService
 import com.esosa.f5pi_backend.security.utils.Constants.Companion.MISSING_HEADER_EXCEPTION_MESSAGE
 import com.esosa.f5pi_backend.utils.SWAGGER_URLS
@@ -24,7 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JWTAuthenticationFilter(
     @Qualifier("customUserDetailsService") private val userDetailsService: CustomUserDetailsService,
-    private val jwtService: JWTService,
+    private val jwtService: IJWTService,
     private val pathMatcher: AntPathMatcher,
     private val entryPoint: JWTAuthEntryPoint
 ) : OncePerRequestFilter() {
@@ -42,8 +42,7 @@ class JWTAuthenticationFilter(
             authenticateRequest(request)
             filterChain.doFilter(request, response)
         }.onFailure {
-            val authException = it as? AuthenticationException
-                ?: JWTAuthException("Authentication failed", it)
+            val authException = it as? AuthenticationException ?: JWTAuthException(it)
             entryPoint.commence(request, response, authException)
         }
     }
@@ -52,26 +51,22 @@ class JWTAuthenticationFilter(
         arrayOf(*WHITE_LIST_URLS, *SWAGGER_URLS).any { pathMatcher.match(it, request.requestURI) }
 
     private fun authenticateRequest(request: HttpServletRequest) {
-        val authHeader = request.getValidAuthHeader()
-        val token = authHeader.extractToken()
-        val username = jwtService.extractUsernameFromToken(token)
+        val token = request.getTokenFromAuthHeader()
+        val username = runCatchingAuthException { jwtService.extractUsernameFromToken(token) }
         val user = runCatchingAuthException { userDetailsService.loadUserByUsername(username) }
 
-        if (jwtService.isTokenValid(token, user))
+        if (jwtService.isTokenValid(token, username))
             updateContext(user, request)
     }
 
-    private fun HttpServletRequest.getValidAuthHeader(): String =
+    private fun HttpServletRequest.getTokenFromAuthHeader(): String =
         getHeader(AUTHORIZATION)
             ?.takeIf { it.startsWith(BEARER_PREFIX) }
+            ?.substringAfter(BEARER_PREFIX)
             ?: throw JWTAuthException(
                 MISSING_HEADER_EXCEPTION_MESSAGE.first,
-                IllegalArgumentException("Authorization header is missing or invalid")
+                IllegalArgumentException(MISSING_HEADER_EXCEPTION_MESSAGE.first)
             )
-
-    private fun String.extractToken(): String =
-        substringAfter(BEARER_PREFIX).takeIf { it.isNotBlank() }
-            ?: throw IllegalStateException("Invalid JWT format")
 
     private fun updateContext(user: UserDetails, request: HttpServletRequest) {
         UsernamePasswordAuthenticationToken(user, null, user.authorities)
