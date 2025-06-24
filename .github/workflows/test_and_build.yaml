@@ -1,0 +1,52 @@
+name: Test and Build in Canary Branch
+
+on:
+  push:
+    branches:
+      - canary
+  pull_request:
+    branches:
+      - canary
+
+jobs:
+  test:
+    name: Run all tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17 with Gradle cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Run tests
+        run: ./gradlew test
+
+    build:
+    name: Build application 
+    runs-on: ubuntu-latest
+    needs: test
+      steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 with Gradle cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      -name: Build application
+        run: ./gradlew build
