@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out code
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17 with Gradle cache
         uses: actions/setup-java@v4
