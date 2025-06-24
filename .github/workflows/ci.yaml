@@ -36,3 +36,39 @@ jobs:
           name: Test Results
           path: build/test-results/test/*.xml
           reporter: java-junit
+
+  create-pr-to-dev:
+    name: Create PR to dev (requires admin approval)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/canary'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Create Pull Request to dev
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: dev  # La rama de producción
+          branch: canary
+          title: '🚀 [REQUIRES ADMIN APPROVAL] Auto PR from Canary'
+          body: |
+            ## ✅ Tests Passed - Ready for Admin Review
+            
+            **⚠️ This PR requires admin approval before merging to `dev`**
+            
+            ### Test Results:
+            - ✅ All unit tests passed
+            - ✅ Build successful
+            - ✅ Code ready for production
+            ---
+            *This PR was automatically created after successful tests in canary branch*
+          labels: |
+            auto-pr
+            canary
+            requires-admin-approval
+            ready-for-review
