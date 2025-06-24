@@ -47,7 +47,6 @@ jobs:
       - name: Create PR to dev branch
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.PAT }}
           base: dev
           branch: canary
           title: "Merge canary into dev"
