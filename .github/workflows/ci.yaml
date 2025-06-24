@@ -49,6 +49,7 @@ jobs:
         with:
           base: dev
           branch: canary
+          token: ${{ secrets.PAT }}
           title: "Merge canary into dev"
           body: |
             Este PR fusiona los últimos cambios de la rama `canary` en `dev`.
