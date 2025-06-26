@@ -6,10 +6,10 @@ import com.esosa.f5pi_backend.controllers.responses.MemberResponse
 import com.esosa.f5pi_backend.controllers.responses.TeamResponse
 import com.esosa.f5pi_backend.data.enums.TeamResult
 import com.esosa.f5pi_backend.data.models.Team
+import com.esosa.f5pi_backend.data.models.GameDetails
 import com.esosa.f5pi_backend.data.repositories.ITeamRepository
 import com.esosa.f5pi_backend.services.interfaces.IMemberService
 import com.esosa.f5pi_backend.services.interfaces.ITeamService
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,19 +18,25 @@ class TeamService(
     private val memberService: IMemberService
 ) : ITeamService {
 
-    @Async
     override fun saveTeam(
         teamResult: TeamResult,
         teamGoals: Int,
-        teamRequest: TeamRequest
-    ) =
-        buildTeam(teamResult, teamGoals)
-            .also { teamRepository.save(it) }
-            .let { TeamResponse(it.result, it.goals, saveMembers(teamRequest.members)) }
+        teamRequest: TeamRequest,
+        gameDetails: GameDetails
+    ): TeamResponse =
+        buildTeam(teamResult, teamGoals, gameDetails)
+            .let { team ->
+                val savedTeam = teamRepository.save(team)
+                TeamResponse(
+                    result = savedTeam.result,
+                    goals = savedTeam.goals,
+                    members = saveMembers(teamRequest.members, savedTeam)
+                )
+            }
 
-    private fun buildTeam(teamResult: TeamResult, teamGoals: Int): Team =
-        Team(teamResult, teamGoals)
+    private fun buildTeam(teamResult: TeamResult, teamGoals: Int, gameDetails: GameDetails): Team =
+        Team(teamResult, teamGoals, gameDetails)
 
-    private fun saveMembers(members: List<MemberRequest>): List<MemberResponse> =
-        members.map { memberRequest -> memberService.saveMember(memberRequest) }
+    private fun saveMembers(members: List<MemberRequest>, team: Team): List<MemberResponse> =
+        members.map { memberRequest -> memberService.saveMember(memberRequest, team) }
 }

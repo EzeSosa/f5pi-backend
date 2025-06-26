@@ -12,6 +12,8 @@ import com.esosa.f5pi_backend.data.models.Game
 import com.esosa.f5pi_backend.data.models.Season
 import com.esosa.f5pi_backend.data.models.User
 import com.esosa.f5pi_backend.data.repositories.IGameRepository
+import com.esosa.f5pi_backend.data.repositories.IGameDetailsRepository
+import com.esosa.f5pi_backend.data.models.GameDetails
 import com.esosa.f5pi_backend.services.interfaces.IFieldService
 import com.esosa.f5pi_backend.services.interfaces.IGameService
 import com.esosa.f5pi_backend.services.interfaces.ISeasonService
@@ -29,6 +31,7 @@ import java.util.UUID
 @Service
 class GameService(
     private val gameRepository: IGameRepository,
+    private val gameDetailsRepository: IGameDetailsRepository,
     private val userService: IUserService,
     private val teamService: ITeamService,
     private val fieldService: IFieldService,
@@ -40,6 +43,7 @@ class GameService(
             .details
             .buildGameDetailsResponse()
 
+    @Transactional
     override fun saveGame(createGameRequest: CreateGameRequest): GameResponse =
         with(createGameRequest) {
             val season = seasonService.findSeasonByIdOrThrowException(seasonId)
@@ -62,11 +66,14 @@ class GameService(
             val teamGoals = calculateTeamGoals(it.teams)
             val teamResults = determineTeamResults(teamGoals)
 
-            return game.details
+            // Usar los detalles existentes del juego
+            val gameDetails = game.details
+
+            return gameDetails
                 .buildGameDetailsResponse()
                 .apply {
                     teams = gameDetailsRequest.teams.mapIndexed { index, team ->
-                        teamService.saveTeam(teamResults.toList()[index], teamGoals.toList()[index], team)
+                        teamService.saveTeam(teamResults.toList()[index], teamGoals.toList()[index], team, gameDetails)
                     }
                 }
         }
